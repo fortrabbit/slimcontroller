@@ -18,6 +18,19 @@ class ParamsTest extends SlimControllerUnitTestCase
         $this->app->router()->dispatch($route);
     }
 
+
+    public function testParamsSingleObject()
+    {
+        $this->expectOutputString('Param is 123123123');
+        $this->setUrl('/', 'data[Some][attrib1]=123&data[Some][attrib2]=123&data[Some][attrib3]=123');
+        $this->app->addRoutes(array(
+            '/' => 'Test:paramSingleObject',
+        ));
+        $this->app->router()->setResourceUri($this->req->getResourceUri());
+        list($route) = $this->app->router()->getMatchedRoutes();
+        $this->app->router()->dispatch($route);
+    }
+
     public function testParamsMulti()
     {
         $this->expectOutputString('All is foo bar');

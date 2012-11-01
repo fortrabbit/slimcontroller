@@ -19,6 +19,12 @@ class Test extends \SlimController\SlimController {
         echo "Param is ". $this->param('Some.param');
     }
 
+    public function paramSingleObjectAction()
+    {
+        $obj = $this->param('Some');
+        echo "Param is ". $obj['attrib1']. $obj['attrib2']. $obj['attrib3'];
+    }
+
     public function paramMultiAction()
     {
         $params = $this->params(array('Some.param', 'Other.param', 'Other.missing'));

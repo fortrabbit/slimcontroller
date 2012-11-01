@@ -5,7 +5,7 @@
  *
  * @author Ulrich Kautz <uk@fortrabbit.de>
  * @copyright 2012 Ulrich Kautz
- * @version 0.1.0
+ * @version 0.1.1
  * @package SlimController
  *
  * For the full copyright and license information, please view the LICENSE
@@ -25,7 +25,7 @@ abstract class SlimController
     /**
      * @const string
      */
-    const VERSION = '0.1.0';
+    const VERSION = '0.1.1';
 
     /**
      * @var \Slim\Slim
@@ -80,7 +80,7 @@ abstract class SlimController
     }
 
     /**
-     * Renders output
+     * Renders output with given template
      *
      * @param string $template Name of the template to be rendererd
      * @param array  $args     Args for view
@@ -99,7 +99,7 @@ abstract class SlimController
     }
 
     /**
-     * Calls redirect
+     * Performs redirect
      *
      * @param string $path
      */
@@ -109,10 +109,9 @@ abstract class SlimController
     }
 
     /**
-     * Renders output
+     * Slim's request object
      *
-     * @param string $template Name of the template to be rendererd
-     * @param array  $args     Args for view
+     * @return \Slim\Request
      */
     protected function request()
     {
@@ -121,7 +120,7 @@ abstract class SlimController
 
 
     /**
-     * The long description
+     * Returns a single parameter of the "data[Object][Key]" format.
      *
      * <code>
      $paramValue = $this->param('prefix.name'); // prefix[name] -> "string value"
@@ -129,7 +128,7 @@ abstract class SlimController
      $paramValue = $this->param('prefix.name', 'get'); // prefix[name] -> "string value"
      * </code>
      *
-     * @param mixed $name    Name or names of parameters (GET or POST)
+     * @param mixed $name    Name of the parameter
      * @param mixed $reqMode Optional mode. Either null (all params), true | "post"
      *                       (only POST params), false | "get" (only GET params)
      *
@@ -193,21 +192,11 @@ abstract class SlimController
         return null;
     }
 
-    /**
-     * The long description
-     *
-     * @param Some\Class   $arg1  What it contains
-     * @param string       $arg2  What it contains
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
     private function cleanupParam($value, $args)
     {
         if (is_array($value)) {
             foreach ($value as $k => $v) {
-                $clean = $self->cleanupParam($v);
+                $clean = $this->cleanupParam($v, $args);
                 if (!is_null($clean)) {
                     $value[$k] = $clean;
                 }
@@ -242,7 +231,7 @@ abstract class SlimController
 
 
     /**
-     * The long description
+     * Reads multiple params at once
      *
      * <code>
      $params = $this->params(['prefix.name', 'other.name']); //  -> ["prefix.name" => "value", ..]
