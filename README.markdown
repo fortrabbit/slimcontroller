@@ -31,8 +31,7 @@ If you know how [Slim works](http://docs.slimframework.com/), using SlimControll
 
 Setup a structure for your controller and templates (just a suggestion, do as you like):
 
-    mkdir -p src/MyApp/Controller
-    mkdir -p templates
+    mkdir -p src/MyApp/Controller templates
 
 ## Controller
 
