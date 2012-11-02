@@ -5,7 +5,7 @@
  *
  * @author Ulrich Kautz <uk@fortrabbit.de>
  * @copyright 2012 Ulrich Kautz
- * @version 0.1.1
+ * @version 0.1.2
  * @package SlimController
  *
  * For the full copyright and license information, please view the LICENSE
@@ -38,24 +38,25 @@ class Slim extends \Slim\Slim
             }
 
             // specific HTTP method
-            elseif (isset($args['http'])) {
-                $httpMethod = strtolower($args['http']);
-                unset($args['http']);
+            if (count($args) > 1 && is_string($args[1])) {
+                $classAction = array_shift($args);
+                $httpMethod  = array_shift($args);
+                array_unshift($args, $classAction);
             }
 
-            if (isset($args['args'])) {
-                $args = $args['args'];
-            }
-
+            // readd path & extract route
             array_unshift($args, $path);
             $this->extractControllerFromRoute($args, $condition);
+
+            // call "map" method to add routing
+            $route = call_user_func_array(array($this, 'map'), $args);
             if ('any' === $httpMethod) {
-                $route = call_user_func_array(array($this, 'map'), $args);
                 $route->via('GET', 'POST');
             } else {
-                call_user_func(array($this, $httpMethod), $args);
+                $route->via(strtoupper($httpMethod));
             }
         }
+        return $this;
     }
 
 
@@ -74,17 +75,20 @@ class Slim extends \Slim\Slim
             ? $this->settings['controller.method_suffix']
             : 'Action';
         $methodName = '';
-        $className = $classNamePrefix. array_shift($args);
+        $className = array_shift($args);
+        if (strpos($className, '\\') !== 0) {
+            $className = $classNamePrefix. $className;
+        }
 
-        // having $app->cGet("\Vendor\Bla:method", ..)
+        // having <className>:<methodName>
         if (preg_match('/^(.+):+(.+)$/', $className, $match)) {
             $className = $match[1];
             $methodName = $match[2]. $methodNameSuffix;
         }
 
-        // having $app->cGet("\Vendor\Bla", "method", ..)
+        // malformed
         else {
-            $methodName = array_shift($args). $methodNameSuffix;
+            throw new \InvalidArgumentException("Malformed class action for '$className'. Use 'className:methodName' format.");
         }
 
         // build & append callable
@@ -92,7 +96,6 @@ class Slim extends \Slim\Slim
         $callable = function() use($app, $className, $methodName, $path) {
             $args = func_get_args();
             $instance = new $className($app);
-            //return call_user_method_array($methodName, $instance, $args);
             return call_user_func_array(array($instance, $methodName), $args);
         };
         if (!is_null($condition)) {

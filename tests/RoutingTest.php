@@ -27,11 +27,21 @@ class RoutingTest extends SlimControllerUnitTestCase
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
     }
 
-    public function testAddExtendedRoutes()
+    public function testRoutesWithVariables()
     {
         $this->setUrl('/hello/you');
         $this->app->addRoutes(array(
             '/hello/:name' => 'Controller:index',
+        ));
+        $this->app->router()->setResourceUri($this->req->getResourceUri());
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
+    }
+
+    public function testRoutesWithExtendedFormat()
+    {
+        $this->setUrl('/bla');
+        $this->app->addRoutes(array(
+            '/bla' => array('Controller:index', 'get')
         ));
         $this->app->router()->setResourceUri($this->req->getResourceUri());
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));

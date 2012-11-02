@@ -65,7 +65,7 @@ Here are the two corresponding demo templates:
 
 `templates/home/index.php`
 
-    This is the SlimControlle extension @ <?= $someVar ?>
+    This is the SlimController extension @ <?= $someVar ?>
 
 `templates/home/hello.php`
 
@@ -97,7 +97,7 @@ Minimal bootstrap file for this example
 
 ## Run
 
-    php -S localhos:8080
+    php -S localhost:8080
 
 
 # Controller
@@ -144,8 +144,33 @@ Translates to
 
 Defaults to `twig`. Will be appended to template name given in `render()` method.
 
-## Extended Example
+## Extended Examples
 
+### Routes
+
+    // how to integrate the Slim middleware
+    $app->addRoutes(array(
+        '/' => array(
+            'Home:index',
+            function() {
+                error_log("MIDDLWARE FOR SINGLE ROUTE");
+            },
+            function() {
+                error_log("ADDITIONAL MIDDLWARE FOR SINGLE ROUTE");
+            }
+        ),
+        '/hello/:name' => array(
+            'Home:hello',
+            'post',
+            function() {
+                error_log("THIS ROUTE IS ONLY POST");
+            }
+        )
+    ), function() {
+        error_log("APPENDED MIDDLEWARE FOR ALL ROUTES");
+    });
+
+### Controller
 
     <?php
 
@@ -196,12 +221,12 @@ Defaults to `twig`. Will be appended to template name given in `render()` method
             $params = $this->params(array('foo', 'bar.name1', 'bar.name1'), 'post', array(
                 'foo' => 'Some Default'
             ));
-            $this->app->response()->status(404);
 
 
             /**
              * Redirect shortcut
              */
+
             if (false) {
                 $this->redirect('/somewhere');
             }
@@ -210,6 +235,7 @@ Defaults to `twig`. Will be appended to template name given in `render()` method
             /**
              * Rendering
              */
+
             $this->render('folder/file', array(
                 'foo' => 'bar'
             ));

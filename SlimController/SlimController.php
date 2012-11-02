@@ -5,7 +5,7 @@
  *
  * @author Ulrich Kautz <uk@fortrabbit.de>
  * @copyright 2012 Ulrich Kautz
- * @version 0.1.1
+ * @version 0.1.2
  * @package SlimController
  *
  * For the full copyright and license information, please view the LICENSE
@@ -25,7 +25,7 @@ abstract class SlimController
     /**
      * @const string
      */
-    const VERSION = '0.1.1';
+    const VERSION = '0.1.2';
 
     /**
      * @var \Slim\Slim
