@@ -10,7 +10,7 @@ class SlimControllerUnitTestCase extends \PHPUnit_Framework_TestCase {
     protected $app;
 
 
-    protected function setUrl($path, $params = '')
+    protected function setUrl($path, $params = '', $config = array())
     {
         \Slim\Environment::mock(array(
             'REQUEST_METHOD' => 'GET',
@@ -28,11 +28,11 @@ class SlimControllerUnitTestCase extends \PHPUnit_Framework_TestCase {
         $this->env = \Slim\Environment::getInstance();
         $this->req = new \Slim\Http\Request($this->env);
         $this->res = new \Slim\Http\Response();
-        $this->app = new \SlimController\Slim(array(
+        $this->app = new \SlimController\Slim(array_merge(array(
             'controller.class_prefix'    => '\\Controller',
             'controller.method_suffix'   => 'Action',
             'controller.template_suffix' => 'php',
             'templates.path'             => __DIR__ . '/templates'
-        ));
+        ), $config));
     }
 }

@@ -61,6 +61,21 @@ class Test extends \SlimController\SlimController {
         }
     }
 
+    public function paramDifferentPrefixAction()
+    {
+        $params = $this->params();
+        echo "GOT ". (count($params) === 1 && isset($params['Foo']) && $params['Foo'] === 'bar' ? "OK" : "FAIL");
+    }
+
+    public function paramNoPrefixAction()
+    {
+        $params = $this->params();
+        echo "All params: ". join(" - ", array_map(function($key) use ($params) {
+            return sprintf('%s=%s', $key, $params[$key]);
+        }, array_keys($params)));
+    }
+
+
     public function renderAction()
     {
         $this->render('rendertest', array('foo' => 'orotound', 'bar' => 'grandios'));

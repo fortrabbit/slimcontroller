@@ -25,7 +25,7 @@ abstract class SlimController
     /**
      * @const string
      */
-    const VERSION = '0.1.2';
+    const VERSION = '0.1.3';
 
     /**
      * @var \Slim\Slim
@@ -166,12 +166,7 @@ abstract class SlimController
         $name = $this->paramPrefix. $name;
 
         // determine method for request
-        $reqMeth = $reqMode === true || $reqMode === 'post' // POST
-            ? 'post'
-            : ($reqMode === false || $reqMode === 'get' // GET
-                ? 'get'
-                : 'params' // ALL
-            );
+        $reqMeth = $this->paramAccessorMeth($reqMode);
 
         // determine stash name
         $reqStashName = 'params'. ucfirst($reqMeth);
@@ -246,8 +241,23 @@ abstract class SlimController
      *
      * @return mixed Either array or single string or null
      */
-    protected function params($names, $reqMode = null, $defaults = null)
+    protected function params($names = array(), $reqMode = null, $defaults = null)
     {
+        // no names given -> get them all
+        if (!$names) {
+            $reqMeth = $this->paramAccessorMeth($reqMode);
+            $params = $this->request()->$reqMeth();
+            $namesPre = self::flatten($params);
+            $names = array_keys($namesPre);
+            if ($prefix = $this->paramPrefix) {
+                $prefixLen = strlen($prefix);
+                $names = array_map(function ($key) use ($prefixLen) {
+                    return substr($key, $prefixLen);
+                }, array_filter($names, function ($in) use ($prefix) {
+                    return strpos($in, $prefix) === 0;
+                }));
+            }
+        }
         $res = array();
         foreach ($names as $n) {
             $param = $this->param($n, $reqMode);
@@ -266,6 +276,35 @@ abstract class SlimController
             }
         }
         return $res;
+    }
+
+
+    protected function paramAccessorMeth($reqMode = null)
+    {
+        return $reqMode === true || $reqMode === 'post' // POST
+            ? 'post'
+            : ($reqMode === false || $reqMode === 'get' // GET
+                ? 'get'
+                : 'params' // ALL
+            );
+    }
+
+
+
+    protected static function flatten($data, $flat = array(), $prefix = '')
+    {
+        foreach ($data as $key => $value) {
+
+            // is array -> flatten deeped
+            if (is_array($value)) {
+                $flat = self::flatten($value, $flat, $prefix. $key. '.');
+            }
+            // scalar -> use
+            else {
+                $flat[$prefix. $key] = $value;
+            }
+        }
+        return $flat;
     }
 
 }

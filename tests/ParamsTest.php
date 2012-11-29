@@ -78,4 +78,32 @@ class ParamsTest extends SlimControllerUnitTestCase
         list($route) = $this->app->router()->getMatchedRoutes();
         $this->app->router()->dispatch($route);
     }
+
+    public function testParamsDifferentPrefix()
+    {
+        $this->expectOutputString('GOT OK');
+        $this->setUrl('/', 'data[Foo]=bar&other[Foo]=bar', array(
+            'controller.param_prefix' => 'other.'
+        ));
+        $this->app->addRoutes(array(
+            '/' => 'Test:paramDifferentPrefix',
+        ));
+        $this->app->router()->setResourceUri($this->req->getResourceUri());
+        list($route) = $this->app->router()->getMatchedRoutes();
+        $this->app->router()->dispatch($route);
+    }
+
+    public function testParamsNoPrefix()
+    {
+        $this->expectOutputString('All params: data.Foo=bar - other.Foo=bar');
+        $this->setUrl('/', 'data[Foo]=bar&other[Foo]=bar', array(
+            'controller.param_prefix' => ''
+        ));
+        $this->app->addRoutes(array(
+            '/' => 'Test:paramNoPrefix',
+        ));
+        $this->app->router()->setResourceUri($this->req->getResourceUri());
+        list($route) = $this->app->router()->getMatchedRoutes();
+        $this->app->router()->dispatch($route);
+    }
 }
