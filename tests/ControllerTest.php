@@ -13,8 +13,7 @@ class ControllerTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/' => 'Test:index',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        list($route) = $this->app->router()->getMatchedRoutes();
+        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         $this->app->router()->dispatch($route);
     }
 
@@ -25,8 +24,7 @@ class ControllerTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/hello/:name' => 'Test:hello',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        list($route) = $this->app->router()->getMatchedRoutes();
+        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         $this->app->router()->dispatch($route);
     }
 
@@ -37,8 +35,7 @@ class ControllerTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/hello/:name' => '\\Controller\\Test:hello',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        list($route) = $this->app->router()->getMatchedRoutes();
+        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         $this->app->router()->dispatch($route);
     }
 }

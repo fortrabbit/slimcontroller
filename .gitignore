@@ -1,3 +1,4 @@
 vendor/
 testApp/
+SlimController/__Params.php
 composer.lock

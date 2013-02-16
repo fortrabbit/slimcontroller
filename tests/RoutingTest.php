@@ -11,20 +11,17 @@ class RoutingTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/' => 'Controller:index',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
 
         $this->setUrl('/foo');
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        $this->assertEquals(0, count($this->app->router()->getMatchedRoutes()));
+        $this->assertEquals(0, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
 
         $this->setUrl('/other');
 
         $this->app->addRoutes(array(
             '/other' => 'Controller:other',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
     public function testRoutesWithVariables()
@@ -33,8 +30,7 @@ class RoutingTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/hello/:name' => 'Controller:index',
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
     public function testRoutesWithExtendedFormat()
@@ -43,8 +39,7 @@ class RoutingTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/bla' => array('Controller:index', 'get')
         ));
-        $this->app->router()->setResourceUri($this->req->getResourceUri());
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes()));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
 }
