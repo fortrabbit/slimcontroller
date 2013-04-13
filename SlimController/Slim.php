@@ -81,7 +81,7 @@ class Slim extends \Slim\Slim
         }
 
         // having <className>:<methodName>
-        if (preg_match('/^(.+):+(.+)$/', $className, $match)) {
+        if (preg_match('/^([a-zA-Z0-9\\\\_]+):([a-zA-Z0-9_]+)$/', $className, $match)) {
             $className = $match[1];
             $methodName = $match[2]. $methodNameSuffix;
         }
