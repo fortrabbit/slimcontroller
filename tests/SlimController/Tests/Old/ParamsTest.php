@@ -1,8 +1,8 @@
 <?php
 
-namespace SlimControllerTest;
+namespace SlimController\Tests;
 
-class ParamsTest extends SlimControllerUnitTestCase
+class ParamsTest extends TestCase
 {
 
 
@@ -14,7 +14,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramSingle',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
 
@@ -26,7 +27,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramSingleObject',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsMulti()
@@ -37,7 +39,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramMulti',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsMultiMissing()
@@ -48,7 +51,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramMultiMissing',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsMultiMissingReq()
@@ -59,7 +63,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramMultiMissingReq',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsMultiDefault()
@@ -70,7 +75,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramMultiDefault',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsDifferentPrefix()
@@ -83,7 +89,8 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramDifferentPrefix',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testParamsNoPrefix()
@@ -96,6 +103,7 @@ class ParamsTest extends SlimControllerUnitTestCase
             '/' => 'Test:paramNoPrefix',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 }
