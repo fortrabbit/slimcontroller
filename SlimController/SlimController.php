@@ -105,13 +105,13 @@ abstract class SlimController
      */
     protected function redirect($path)
     {
-        return $this->app->redirect($path);
+        $this->app->redirect($path);
     }
 
     /**
      * Slim's request object
      *
-     * @return \Slim\Request
+     * @return \Slim\Http\Request
      */
     protected function request()
     {
@@ -210,7 +210,7 @@ abstract class SlimController
             if ($constraint = $args['constraint']) {
 
                 // constraint = function & not matching
-                if (is_object($constraint) && get_class($constraint) === 'Closure' && !$constraint($value)) {
+                if (is_object($constraint) && $constraint instanceof \Closure && !$constraint($value)) {
                     return null;
                 }
 
@@ -234,7 +234,7 @@ abstract class SlimController
      $params = $this->params(['prefix.name', 'other.name'], ['other.name' => "Default Value"]);
      * </code>
      *
-     * @param mixed $name    Name or names of parameters (GET or POST)
+     * @param mixed $names    Name or names of parameters (GET or POST)
      * @param mixed $reqMode Optional mode. Either null (all params), true | "post"
      *                       (only POST params), false | "get" (only GET params)
      * @param mixed $defaults Either true (require ALL given or return null), array (defaults)
