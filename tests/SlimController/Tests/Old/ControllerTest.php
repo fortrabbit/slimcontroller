@@ -1,10 +1,9 @@
 <?php
 
-namespace SlimControllerTest;
+namespace SlimController\Tests;
 
-class ControllerTest extends SlimControllerUnitTestCase
+class ControllerTest extends TestCase
 {
-
 
     public function testControllerSimple()
     {
@@ -13,8 +12,10 @@ class ControllerTest extends SlimControllerUnitTestCase
         $this->app->addRoutes(array(
             '/' => 'Test:index',
         ));
+
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testControllerExtended()
@@ -25,7 +26,8 @@ class ControllerTest extends SlimControllerUnitTestCase
             '/hello/:name' => 'Test:hello',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 
     public function testControllerAbsPath()
@@ -33,9 +35,10 @@ class ControllerTest extends SlimControllerUnitTestCase
         $this->expectOutputString('What is up YOU?');
         $this->setUrl('/hello/YOU');
         $this->app->addRoutes(array(
-            '/hello/:name' => '\\Controller\\Test:hello',
+            '/hello/:name' => 'Test:hello',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 }
