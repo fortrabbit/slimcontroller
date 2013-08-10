@@ -26,6 +26,7 @@ class Slim extends \Slim\Slim
      *
      * @param array    $routings  The route definitions
      * @param callable $condition Optional callable used for all routes as middleware
+     * @return $this
      */
     public function addRoutes(array $routings, $condition = null)
     {
