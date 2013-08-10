@@ -105,7 +105,7 @@ abstract class SlimController
      */
     protected function redirect($path)
     {
-        return $this->app->redirect($path);
+        $this->app->redirect($path);
     }
 
     /**
