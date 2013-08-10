@@ -210,7 +210,7 @@ abstract class SlimController
             if ($constraint = $args['constraint']) {
 
                 // constraint = function & not matching
-                if (is_object($constraint) && get_class($constraint) === 'Closure' && !$constraint($value)) {
+                if (is_object($constraint) && $constraint instanceof \Closure && !$constraint($value)) {
                     return null;
                 }
 
