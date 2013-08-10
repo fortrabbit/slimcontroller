@@ -111,7 +111,7 @@ abstract class SlimController
     /**
      * Slim's request object
      *
-     * @return \Slim\Request
+     * @return \Slim\Http\Request
      */
     protected function request()
     {
