@@ -1,8 +1,8 @@
 <?php
 
-namespace SlimControllerTest;
+namespace SlimController\Tests;
 
-class RenderTest extends SlimControllerUnitTestCase
+class RenderTest extends TestCase
 {
 
     public function testParamsMultiDefault()
@@ -13,6 +13,7 @@ class RenderTest extends SlimControllerUnitTestCase
             '/' => 'Test:render',
         ));
         list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $this->app->router()->dispatch($route);
+        //$this->app->router()->dispatch($route);
+        $route->dispatch();
     }
 }

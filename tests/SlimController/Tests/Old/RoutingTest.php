@@ -1,8 +1,8 @@
 <?php
 
-namespace SlimControllerTest;
+namespace SlimController\Tests;
 
-class RoutingTest extends SlimControllerUnitTestCase
+class RoutingTest extends TestCase
 {
 
     public function testAddSimpleRoutes()
