@@ -68,4 +68,9 @@ class TestController extends SlimController
         $this->redirect('/here');
     }
 
+    public function notSuffixedMethod()
+    {
+        echo "Yes, I was called";
+    }
+
 }

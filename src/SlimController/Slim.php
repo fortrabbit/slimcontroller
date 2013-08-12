@@ -166,7 +166,10 @@ class Slim extends \Slim\Slim
         $classNameSuffix = $this->config('controller.class_suffix') ? : '';
 
         // determine method suffix or default to "Action"
-        $methodNameSuffix = $this->config('controller.method_suffix') ? : 'Action';
+        $methodNameSuffix = $this->config('controller.method_suffix');
+        if (is_null($methodNameSuffix)) {
+            $methodNameSuffix = 'Action';
+        }
         $realClassMethod  = $classMethod;
         if (strpos($realClassMethod, '\\') !== 0) {
             $realClassMethod = $classNamePrefix . $classMethod;

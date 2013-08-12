@@ -139,4 +139,17 @@ class SlimTest extends TestCase
         $route->dispatch();
     }
 
+    public function testEmptyButNotNullMethodSuffixAccepted()
+    {
+        $this->expectOutputString('Yes, I was called');
+        $this->setUrl('/bla', '', array(
+            'controller.method_suffix'   => ''
+        ));
+        $this->app->addRoutes(array(
+            '/bla' => 'Test:notSuffixedMethod'
+        ));
+        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        $route->dispatch();
+    }
+
 }
