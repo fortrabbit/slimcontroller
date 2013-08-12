@@ -13,7 +13,6 @@
  */
 
 namespace SlimController;
-use Slim\Slim;
 
 /**
  * Implements a basic controller functionallity.
@@ -66,9 +65,9 @@ abstract class SlimController
     /**
      * Constructor for TodoQueue\Controller\Login
      *
-     * @param Slim $app Ref to slim app
+     * @param \Slim\Slim $app Ref to slim app
      */
-    public function __construct(Slim &$app)
+    public function __construct(\Slim\Slim &$app)
     {
         $this->app = $app;
         if ($renderTemplateSuffix = $app->config('controller.template_suffix')) {
