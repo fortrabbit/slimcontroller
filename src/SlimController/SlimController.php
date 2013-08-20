@@ -72,17 +72,29 @@ abstract class SlimController
     public function __construct(\Slim\Slim &$app)
     {
         $this->app = $app;
-        if ($renderTemplateSuffix = $app->config('controller.template_suffix')) {
+
+        if (NULL === ($renderTemplateSuffix = $app->config('controller.template_suffix')))
+        {
+            // no selection, use JSON as output
+            $this->app->view(New \JsonApiView());
+            $this->app->add(New \JsonApiMiddleware());
+        } else {
             $this->renderTemplateSuffix = $renderTemplateSuffix;
         }
-        if (!is_null($paramPrefix = $app->config('controller.param_prefix'))) {
+
+        if (!is_null($paramPrefix = $app->config('controller.param_prefix')))
+        {
             $this->paramPrefix = $paramPrefix;
             $prefixLength      = strlen($this->paramPrefix);
-            if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.') {
+
+            if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.')
+            {
                 $this->paramPrefix .= '.';
             }
         }
-        if ($app->config('controller.cleanup_params')) {
+
+        if ($app->config('controller.cleanup_params'))
+        {
             $this->paramCleanup = true;
         }
     }
@@ -95,14 +107,11 @@ abstract class SlimController
      */
     protected function render($template, $args = null)
     {
-        if (!is_null($args)) {
-            $this->app->view()->appendData($args);
-        }
-        if (!is_null($this->renderTemplateSuffix)
-            && !preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template)
-        ) {
+        if (! is_null($args)) $this->app->view()->appendData($args);
+
+        if (! is_null($this->renderTemplateSuffix) && ! preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template))
             $template .= '.' . $this->renderTemplateSuffix;
-        }
+
         $this->app->render($template);
     }
 
