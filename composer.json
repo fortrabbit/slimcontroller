@@ -4,7 +4,7 @@
     "type":        "library",
     "description": "Controller extensions for the Slim Framework",
     "keywords":    ["microframework", "controller"],
-    "homepage":    "http://github.com/fortrabbit/slimcontroller",
+    "homepage":    "http://github.com/ehime/slimcontroller",
     "license":     "MIT",
     "authors": [
         {
