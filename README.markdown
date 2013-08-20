@@ -77,12 +77,15 @@ Minimal bootstrap file for this example
 
     <?php
 
+    // define a working directory
+    define('APP_PATH', dirname(__DIR__)); // PHP v5.3+
+
     // load
-    require 'vendor/autoload.php';
+    require APP_PATH . '/vendor/autoload.php';
 
     // init app
-    $app = new \SlimController\Slim(array(
-        'templates.path'             => './templates',
+    $app = New \SlimController\Slim(array(
+        'templates.path'             => APP_PATH . '/templates',
         'controller.class_prefix'    => '\\MyApp\\Controller',
         'controller.method_suffix'   => 'Action',
         'controller.template_suffix' => 'php',
