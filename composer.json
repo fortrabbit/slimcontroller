@@ -1,6 +1,6 @@
 {
-    "name":        "slimcontroller/slimcontroller",
-    "version":     "0.2.0-dev",
+    "name":        "ehime/slimcontroller",
+    "version":     "0.2.2-dev",
     "type":        "library",
     "description": "Controller extensions for the Slim Framework",
     "keywords":    ["microframework", "controller"],
@@ -11,6 +11,11 @@
             "name":     "Ulrich Kautz",
             "email":    "uk@fortrabbit.de",
             "homepage": "http://fortrabbit.com/"
+        },
+        {
+            "name":     "Jd Daniel",
+            "email":    "dodomeki@gmail.com",
+            "homepage": "http://hydracode.io/"
         }
     ],
     "require": {
