@@ -4,28 +4,29 @@
  * This file is part of SlimController.
  *
  * @author Ulrich Kautz <uk@fortrabbit.de>
- * @copyright 2012 Ulrich Kautz
- * @version 0.1.2
+ * @author Jd Daniel <dodomeki@gmail.com>
+ * @copyright 2013 Ulrich Kautz
+ * @version 0.1.5
  * @package SlimController
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace SlimController;
+Namespace SlimController;
 
 /**
  * Implements a basic controller functionallity.
  * It should not be instanciated directly but extended from.
  */
 
-abstract class SlimController
+Abstract Class SlimController
 {
 
     /**
      * @const string
      */
-    const VERSION = '0.1.4';
+    const VERSION = '0.1.5';
 
     /**
      * @var Slim
@@ -35,7 +36,7 @@ abstract class SlimController
     /**
      * @var bool Whether cleanup params or not
      */
-    protected $paramCleanup = false;
+    protected $paramCleanup = FALSE;
 
     /**
      * @var string Prefix for params
@@ -45,22 +46,24 @@ abstract class SlimController
     /**
      * @var array Stash of GET & POST params
      */
-    private $paramsParams = null;
+    private $paramsParams = NULL;
 
     /**
      * @var array Stash of GET params
      */
-    private $paramsGet = null;
+    private $paramsGet = NULL;
 
     /**
      * @var array Stash of POST params
      */
-    private $paramsPost = null;
+    private $paramsPost = NULL;
 
     /**
+     * Suffix was never specified and defaults to empty string 
+     * 
      * @var string
      */
-    protected $renderTemplateSuffix = null;
+    protected $renderTemplateSuffix = NULL;
 
     /**
      * Constructor for TodoQueue\Controller\Login
@@ -70,17 +73,35 @@ abstract class SlimController
     public function __construct(\Slim\Slim &$app)
     {
         $this->app = $app;
-        if ($renderTemplateSuffix = $app->config('controller.template_suffix')) {
+
+        if (NULL === ($renderTemplateSuffix = $app->config('controller.template_suffix')))
+        {
+            // no selection, use JSON as output, v >= 5.4 make nice
+            $this->app->view((in_array('PrettyApiView', get_declared_classes()))
+                    ? New \PrettyApiView()  // https://github.com/ehime/PrettyApiView.git
+                    : New \JsonApiView());
+
+            $this->app->add(New \JsonApiMiddleware());
+        }
+
+        else 
+        {
             $this->renderTemplateSuffix = $renderTemplateSuffix;
         }
-        if (!is_null($paramPrefix = $app->config('controller.param_prefix'))) {
+
+        if (! is_null($paramPrefix = $app->config('controller.param_prefix')))
+        {
             $this->paramPrefix = $paramPrefix;
             $prefixLength      = strlen($this->paramPrefix);
-            if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.') {
+
+            if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.')
+            {
                 $this->paramPrefix .= '.';
             }
         }
-        if ($app->config('controller.cleanup_params')) {
+
+        if ($app->config('controller.cleanup_params'))
+        {
             $this->paramCleanup = true;
         }
     }
@@ -93,14 +114,11 @@ abstract class SlimController
      */
     protected function render($template, $args = null)
     {
-        if (!is_null($args)) {
-            $this->app->view()->appendData($args);
-        }
-        if (!is_null($this->renderTemplateSuffix)
-            && !preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template)
-        ) {
+        if (! is_null($args)) $this->app->view()->appendData($args);
+
+        if (! is_null($this->renderTemplateSuffix) && ! preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template))
             $template .= '.' . $this->renderTemplateSuffix;
-        }
+
         $this->app->render($template);
     }
 
