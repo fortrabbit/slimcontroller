@@ -1,5 +1,18 @@
 <?php
 
+/*
+ * This file is part of SlimController.
+ *
+ * @author Ulrich Kautz <uk@fortrabbit.de>
+ * @author Jd Daniel <dodomeki@gmail.com>
+ * @copyright 2013 Ulrich Kautz
+ * @version 0.1.5
+ * @package SlimController
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 Namespace SlimController;
 
 /**
