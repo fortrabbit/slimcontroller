@@ -58,9 +58,11 @@ abstract class SlimController
     private $paramsPost = null;
 
     /**
+     * Suffix was never specified and defaults to empty string 
+     * 
      * @var string
      */
-    protected $renderTemplateSuffix = null;
+    protected $renderTemplateSuffix = 'twig';
 
     /**
      * Constructor for TodoQueue\Controller\Login
