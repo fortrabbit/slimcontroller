@@ -1,6 +1,6 @@
 {
     "name":        "slimcontroller/slimcontroller",
-    "version":     "0.2.0-dev",
+    "version":     "0.2.1-dev",
     "type":        "library",
     "description": "Controller extensions for the Slim Framework",
     "keywords":    ["microframework", "controller"],
