@@ -105,10 +105,10 @@ class Slim extends \Slim\Slim
      *
      * <code>
      * $app->addControllerRoute("/the/path", "className:methodName", array(function () { doSome(); }))
-     *  ->via('get')->condition(..);
+     *  ->via('GET')->condition(..);
      *
      * $app->addControllerRoute("/the/path", "className:methodName")
-     * ->via('get')->condition(..);
+     * ->via('GET')->condition(..);
      * </code>
      *
      * @param string     $path
