@@ -116,7 +116,7 @@ class Slim extends \Slim\Slim
      *
      * @return \Slim\Route
      */
-    public function addControllerRoute($path, $route, array $middleware)
+    public function addControllerRoute($path, $route, array $middleware = array())
     {
         $callback = $this->buildCallbackFromControllerRoute($route);
 

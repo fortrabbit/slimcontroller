@@ -156,7 +156,7 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/');
         $this->app->addControllerRoute(
-            '/', 'Controller:index', array()
+            '/', 'Controller:index'
         )->via('GET');
 
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
