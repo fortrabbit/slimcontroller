@@ -152,4 +152,34 @@ class SlimTest extends TestCase
         $route->dispatch();
     }
 
+    public function testAddControllerRoute()
+    {
+        $this->setUrl('/');
+        $this->app->addControllerRoute(
+            '/', 'Controller:index'
+        )->via('GET');
+
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+    }
+
+    public function testAddControllerRouteWithMiddleware()
+    {
+        $this->setUrl('/');
+        $this->app->addControllerRoute(
+            '/', 'Controller:index', array(
+                function() {
+                    return false;
+                },
+            )
+        )->via('GET');
+
+        /** @var \Slim\Route[] $routes */
+        $routes = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        $this->assertEquals(1, count($routes));
+
+        $middleware = $routes[0]->getMiddleware();
+        $this->assertInternalType('array', $middleware);
+        $this->assertSame(1, count($middleware));
+    }
+
 }

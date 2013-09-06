@@ -104,10 +104,11 @@ class Slim extends \Slim\Slim
      * Add a new controller route
      *
      * <code>
-     * $app->addControllerRoute("/the/path", "className:methodName", function () { doSome(); })
-     *  ->via('get')->condition(..);
-     * $app->addControllerRoute("/the/path", "className:methodName", function () { doSome(); })
-     *  ->via('get')->condition(..);
+     * $app->addControllerRoute("/the/path", "className:methodName", array(function () { doSome(); }))
+     *  ->via('GET')->condition(..);
+     *
+     * $app->addControllerRoute("/the/path", "className:methodName")
+     * ->via('GET')->condition(..);
      * </code>
      *
      * @param string     $path
@@ -116,7 +117,7 @@ class Slim extends \Slim\Slim
      *
      * @return \Slim\Route
      */
-    public function addControllerRoute($path, $route, array $middleware)
+    public function addControllerRoute($path, $route, array $middleware = array())
     {
         $callback = $this->buildCallbackFromControllerRoute($route);
 
