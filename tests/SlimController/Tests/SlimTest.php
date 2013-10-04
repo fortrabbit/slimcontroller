@@ -182,4 +182,34 @@ class SlimTest extends TestCase
         $this->assertSame(1, count($middleware));
     }
 
+    public function testNamedRoutes()
+    {
+        $this->setUrl('/');
+        $this->app->addRoutes(array(
+            '/'              => 'Controller:index',
+            '/bla'           => 'Bla:Index',
+            '/something/:id' => 'Something:show'
+        ));
+
+        $this->assertEquals('/', $this->app->urlFor('Controller:index'));
+        $this->assertEquals('/bla', $this->app->urlFor('Bla:Index'));
+        $this->assertEquals('/something/:id', $this->app->urlFor('Something:show'));
+    }
+
+    /**
+     * @expectedException        \RuntimeException
+     * @expectedExceptionMessage Named route not found for name: this is not a named route
+     */
+    public function testNamedRoutesThrowsExceptionIfLookingForARouteThatDoesNotExist()
+    {
+        $this->setUrl('/');
+        $this->app->addRoutes(array(
+            '/'              => 'Controller:index',
+            '/bla'           => 'Bla:Index',
+            '/something/:id' => 'Something:show'
+        ));
+
+        $this->assertEquals('/', $this->app->urlFor('this is not a named route'));
+    }
+
 }
