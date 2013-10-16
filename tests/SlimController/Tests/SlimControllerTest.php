@@ -50,17 +50,9 @@ class SlimControllerTest extends \PHPUnit_Framework_TestCase
     public function testRenderingWorksFine()
     {
         $this->assertDefaultConstruction();
-        $view = m::mock();
-        $this->slim->shouldReceive('view')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($view);
-        $view->shouldReceive('appendData')
-            ->once()
-            ->with(array('foo' => 'orotound', 'bar' => 'grandios'));
         $this->slim->shouldReceive('render')
             ->once()
-            ->with('rendertest.Suffix');
+            ->with('rendertest.Suffix', array('foo' => 'orotound', 'bar' => 'grandios'));
 
         $controller = new TestController($this->slim);
         $controller->renderAction();
