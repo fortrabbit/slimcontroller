@@ -93,17 +93,14 @@ abstract class SlimController
      * @param string $template Name of the template to be rendererd
      * @param array  $args     Args for view
      */
-    protected function render($template, $args = null)
+    protected function render($template, $args = array())
     {
-        if (!is_null($args)) {
-            $this->app->view()->appendData($args);
-        }
         if (!is_null($this->renderTemplateSuffix)
             && !preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template)
         ) {
             $template .= '.' . $this->renderTemplateSuffix;
         }
-        $this->app->render($template);
+        $this->app->render($template, $args);
     }
 
     /**
