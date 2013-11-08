@@ -88,7 +88,7 @@ class Slim extends \Slim\Slim
             }
 
             $routeMiddlewares = array_merge($routeArgs, $middlewares);
-            $route            = $this->addControllerRoute($path, $classRoute, $routeMiddlewares);
+            $route            = $this->addControllerRoute($path, $classRoute, $routeMiddlewares)->name($classRoute);
 
             if ('any' === $httpMethod) {
                 call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
