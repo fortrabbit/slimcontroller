@@ -69,8 +69,17 @@ class Slim extends \Slim\Slim
         array_shift($args);
         $middlewares = $args;
 
-        foreach ($routes as $path => $routeArgs) {
-            $httpMethod = 'any';
+        foreach ($routes as $p => $routeArgs) {
+            $path       = $p;
+            $httpMethod = null;
+
+            if (preg_match('/^\s*(?P<method>[\S]+)\s+(?P<path>.+)$/', $path, $matches)) {
+                $httpMethod = strtoupper($matches['method']);
+                $path       = $matches['path'];
+                if (!in_array($httpMethod, static::$ALLOWED_HTTP_METHODS)) {
+                    throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
+                }
+            }
 
             // simple
             if (!is_array($routeArgs)) {
@@ -79,18 +88,10 @@ class Slim extends \Slim\Slim
 
             $classRoute = array_shift($routeArgs);
 
-            // specific HTTP method
-            if (count($routeArgs) > 0 && is_string($routeArgs[0])) {
-                $httpMethod = strtoupper(array_shift($routeArgs));
-                if (!in_array($httpMethod, static::$ALLOWED_HTTP_METHODS)) {
-                    throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
-                }
-            }
-
             $routeMiddlewares = array_merge($routeArgs, $middlewares);
             $route            = $this->addControllerRoute($path, $classRoute, $routeMiddlewares)->name($classRoute);
 
-            if ('any' === $httpMethod) {
+            if (is_null($httpMethod)) {
                 call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
             } else {
                 $route->via($httpMethod);

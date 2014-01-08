@@ -37,11 +37,22 @@ class SlimTest extends TestCase
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
-    public function testAddRoutesInExtendedFormat()
+    public function testAddRoutesInRestFormat()
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            '/bla' => array('Controller:index', 'get')
+            'get /bla' => 'Controller:index'
+        ));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+    }
+
+    public function testAddRoutesInRestFormatWithMultipleWhiteSpaceChars()
+    {
+        $this->setUrl('/bla');
+        $this->app->addRoutes(array(
+            '   get
+
+     		/bla' => 'Controller:index'
         ));
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
@@ -124,7 +135,7 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            '/bla' => array('Controller:index', 'foo')
+            'foo /bla' => 'Controller:index'
         ));
     }
 
