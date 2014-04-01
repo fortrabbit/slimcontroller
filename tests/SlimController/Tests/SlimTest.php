@@ -96,11 +96,35 @@ class SlimTest extends TestCase
 
     public function testArrayOfLocalMiddlewareIsAddedToRoute()
     {
+        $middlewares = array(
+            function() { return false; },
+            function() { return false; }
+        );
+
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            '/bla' => array('get' => array('Controller:index', [function() {
-                return false;
-            }, function() { return false; } ]))
+            '/bla' => array('get' => array('Controller:index', $middlewares))
+        ));
+
+        /** @var \Slim\Route[] $routes */
+        $routes = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        $this->assertEquals(1, count($routes));
+
+        $middleware = $routes[0]->getMiddleware();
+        $this->assertInternalType('array', $middleware);
+        $this->assertSame(2, count($middleware));
+    }
+
+    public function testLocalMiddlewaresAreAddedToRoute()
+    {
+        $middlewares = array(
+            function() { return false; },
+            function() { return false; }
+        );
+
+        $this->setUrl('/bla');
+        $this->app->addRoutes(array(
+            '/bla' => array('get' => array('Controller:index', $middlewares[0], $middlewares[1]))
         ));
 
         /** @var \Slim\Route[] $routes */
