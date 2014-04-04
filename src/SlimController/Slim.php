@@ -67,8 +67,13 @@ class Slim extends \Slim\Slim
     public function addRoutes(array $routes, $globalMiddlewares = array())
     {
         if (!is_array($globalMiddlewares)) {
-            $globalMiddlewares = array($globalMiddlewares);
-        };
+            if (func_num_args() > 2) {
+                $args = func_get_args();
+                $globalMiddlewares = array_slice($args, 1);
+            } else {
+                $globalMiddlewares = array($globalMiddlewares);
+            }
+        }
 
         foreach ($routes as $path => $routeArgs) {
             // create array for simple request
@@ -77,10 +82,10 @@ class Slim extends \Slim\Slim
             foreach ($routeArgs as $httpMethod => $classArgs) {
                 // assign vars if middleware callback exists
                 if(is_array($classArgs)) {
-                    $classRoute = $classArgs[0];
-                    $localMiddlewares = (is_array($classArgs[1])) ? $classArgs[1] : array($classArgs[1]);
+                    $classRoute       = $classArgs[0];
+                    $localMiddlewares = is_array($classArgs[1]) ? $classArgs[1] : array_slice($classArgs, 1);
                 } else {
-                    $classRoute = $classArgs;
+                    $classRoute       = $classArgs;
                     $localMiddlewares = array();
                 }
 
