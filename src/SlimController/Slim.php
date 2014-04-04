@@ -23,7 +23,7 @@ class Slim extends \Slim\Slim
     /**
      * @var array
      */
-    protected static $ALLOWED_HTTP_METHODS = array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD');
+    protected static $ALLOWED_HTTP_METHODS = array('ANY', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD');
 
     /**
      * Add multiple controller based routes
@@ -57,44 +57,47 @@ class Slim extends \Slim\Slim
      * ), function() {});
      * </code>
      *
-     * @param array $routes      The route definitions
-     * @param       callable,... $middlewares Optional callable used for all routes as middleware
-     *
+     * @param array $routes The route definitions
+     * @param array $globalMiddlewares
      * @throws \InvalidArgumentException
+     * @internal param $callable ,... $middlewares Optional callable used for all routes as middleware
+     *
      * @return $this
      */
-    public function addRoutes(array $routes, $middlewares = null)
+    public function addRoutes(array $routes, $globalMiddlewares = array())
     {
-        $args = func_get_args();
-        array_shift($args);
-        $middlewares = $args;
+        if (!is_array($globalMiddlewares)) {
+            $globalMiddlewares = array($globalMiddlewares);
+        };
 
-        foreach ($routes as $p => $routeArgs) {
-            $path       = $p;
-            $httpMethod = null;
+        foreach ($routes as $path => $routeArgs) {
+            // create array for simple request
+            $routeArgs = (is_array($routeArgs)) ? $routeArgs : array('any' => $routeArgs);
 
-            if (preg_match('/^\s*(?P<method>[\S]+)\s+(?P<path>.+)$/', $path, $matches)) {
-                $httpMethod = strtoupper($matches['method']);
-                $path       = $matches['path'];
+            foreach ($routeArgs as $httpMethod => $classArgs) {
+                // assign vars if middleware callback exists
+                if(is_array($classArgs)) {
+                    $classRoute = $classArgs[0];
+                    $localMiddlewares = (is_array($classArgs[1])) ? $classArgs[1] : array($classArgs[1]);
+                } else {
+                    $classRoute = $classArgs;
+                    $localMiddlewares = array();
+                }
+
+                // specific HTTP method
+                $httpMethod = strtoupper($httpMethod);
                 if (!in_array($httpMethod, static::$ALLOWED_HTTP_METHODS)) {
                     throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
                 }
-            }
 
-            // simple
-            if (!is_array($routeArgs)) {
-                $routeArgs = array($routeArgs);
-            }
+                $routeMiddlewares = array_merge($localMiddlewares, $globalMiddlewares);
+                $route = $this->addControllerRoute($path, $classRoute, $routeMiddlewares)->name($classRoute);
 
-            $classRoute = array_shift($routeArgs);
-
-            $routeMiddlewares = array_merge($routeArgs, $middlewares);
-            $route            = $this->addControllerRoute($path, $classRoute, $routeMiddlewares)->name($classRoute);
-
-            if (is_null($httpMethod)) {
-                call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
-            } else {
-                $route->via($httpMethod);
+                if ('any' === $httpMethod) {
+                    call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
+                } else {
+                    $route->via($httpMethod);
+                }
             }
         }
 

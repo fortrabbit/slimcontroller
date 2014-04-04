@@ -41,18 +41,7 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            'get /bla' => 'Controller:index'
-        ));
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
-    }
-
-    public function testAddRoutesInRestFormatWithMultipleWhiteSpaceChars()
-    {
-        $this->setUrl('/bla');
-        $this->app->addRoutes(array(
-            '   get
-
-     		/bla' => 'Controller:index'
+            '/bla' => array('get' => 'Controller:index')
         ));
         $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
@@ -91,9 +80,9 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            '/bla' => array('Controller:index', function() {
+            '/bla' => array('get' => array('Controller:index', function() {
                 return false;
-            })
+            }))
         ));
 
         /** @var \Slim\Route[] $routes */
@@ -105,18 +94,36 @@ class SlimTest extends TestCase
         $this->assertSame(1, count($middleware));
     }
 
+    public function testArrayOfLocalMiddlewareIsAddedToRoute()
+    {
+        $this->setUrl('/bla');
+        $this->app->addRoutes(array(
+            '/bla' => array('get' => array('Controller:index', [function() {
+                return false;
+            }, function() { return false; } ]))
+        ));
+
+        /** @var \Slim\Route[] $routes */
+        $routes = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        $this->assertEquals(1, count($routes));
+
+        $middleware = $routes[0]->getMiddleware();
+        $this->assertInternalType('array', $middleware);
+        $this->assertSame(2, count($middleware));
+    }
+
     public function testGlobalAndLocalMiddlewareIsAddedToRoute()
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            '/bla' => array('Controller:index', function() {
+            '/bla' => array('get' => array('Controller:index', function() {
                 return false;
-            })
-        ), function() {
+            }))
+        ), array(function() {
             return false;
         }, function() {
             return false;
-        });
+        }));
 
         /** @var \Slim\Route[] $routes */
         $routes = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
@@ -135,7 +142,7 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/bla');
         $this->app->addRoutes(array(
-            'foo /bla' => 'Controller:index'
+            '/bla' => array('foo' => 'Controller:index')
         ));
     }
 

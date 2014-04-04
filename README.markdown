@@ -180,18 +180,14 @@ Defaults to `twig`. Will be appended to template name given in `render()` method
 
     // how to integrate the Slim middleware
     $app->addRoutes(array(
-        '/' => array(
-            'Home:index',
-            function() {
-                error_log("MIDDLWARE FOR SINGLE ROUTE");
+        '/' => array('Home:index', array(function() {
+                error_log("MIDDLEWARE FOR SINGLE ROUTE");
             },
             function() {
-                error_log("ADDITIONAL MIDDLWARE FOR SINGLE ROUTE");
-            }
+                error_log("ADDITIONAL MIDDLEWARE FOR SINGLE ROUTE");
+            })
         ),
-        'post /hello/:name' => array(
-            'Home:hello',
-            function() {
+        '/hello/:name' => array('post' => 'Home:hello', function() {
                 error_log("THIS ROUTE IS ONLY POST");
             }
         )
