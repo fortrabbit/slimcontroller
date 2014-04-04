@@ -38,14 +38,14 @@ class Slim extends \Slim\Slim
      * With explicit HTTP method
      * <code>
      * $app->addRoutes(array(
-     *  '/some/path' => array('className:methodName', 'get')
+     *  '/some/path' => array('get' => 'className:methodName')
      * ));
      * </code>
      *
      * With local middleware
      * <code>
      * $app->addRoutes(array(
-     *  '/some/path' => array('className:methodName', 'get', function() {})
+     *  '/some/path'  => array('get' => 'className:methodName', function() {})
      *  '/other/path' => array('className:methodName', function() {})
      * ));
      * </code>

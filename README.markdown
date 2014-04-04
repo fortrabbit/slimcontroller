@@ -112,28 +112,6 @@ Minimal bootstrap file for this example
 
 ## Configuration
 
-### RESTful Routing
-
-You can define the http method that routes use by adding it to the beginning of the route and separating the http method and the path by a space (or any whitespace char(s) [space, tab, newline]).
-
-    $app->addRoutes(array(
-        '/'               => 'Home:index',
-        'get /posts'      => 'Posts:index',
-        'get /posts/:id'  => 'Posts:show',
-        'post /posts'     => 'Posts:create'
-    ));
-
-Leading spaces in routes are ignored and all spaces in between the http method and the route are ignored so that you can have sexy indenting like this:
-
-    $app->addRoutes(array(
-        '     /'           => 'Home:index',
-        'get  /posts'      => 'Posts:index',
-        'get  /posts/:id'  => 'Posts:show',
-        'post /posts'      => 'Posts:create'
-    ));
-
-If you don't specify an http method then that route will work with any http method.
-
 ### controller.class_prefix
 
 Optional class prefix for controller classes. Will be prepended to routes.
