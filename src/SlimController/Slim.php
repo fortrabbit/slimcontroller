@@ -26,6 +26,11 @@ class Slim extends \Slim\Slim
     protected static $ALLOWED_HTTP_METHODS = array('ANY', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD');
 
     /**
+     * @var array
+     */
+    protected $routeNames = array();
+
+    /**
      * Add multiple controller based routes
      *
      * Simple Format
@@ -104,7 +109,12 @@ class Slim extends \Slim\Slim
                 }
 
                 $routeMiddlewares = array_merge($localMiddlewares, $globalMiddlewares);
-                $route = $this->addControllerRoute($path, $classRoute, $routeMiddlewares)->name($classRoute);
+                $route = $this->addControllerRoute($path, $classRoute, $routeMiddlewares);
+
+                if (!isset($this->routeNames[$classRoute])) {
+                    $route->name($classRoute);
+                    $this->routeNames[$classRoute] = 1;
+                }
 
                 if ('any' === $httpMethod) {
                     call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);

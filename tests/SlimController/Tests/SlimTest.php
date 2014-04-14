@@ -9,6 +9,19 @@ namespace SlimController\Tests;
 class SlimTest extends TestCase
 {
 
+    public function testAddingRoutesToSameMethod()
+    {
+        $this->setUrl('/bla');
+        $this->app->addRoutes(array(
+            '/bla' => array('get' => 'Controller:index'),
+            '/alb' => array('get' => 'Controller:index')
+        ));
+
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        // $this->assertTrue($this->app->router->hasNamedRoute('Controller:index'));
+        $this->assertEquals('/bla', $this->app->urlFor('Controller:index'));
+    }
+
     public function testAddingroutesWithOldSyntaxWithoutMiddlewares()
     {
         $this->setUrl('/bla');
