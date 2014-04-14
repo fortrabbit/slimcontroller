@@ -130,6 +130,24 @@ Translates to
         '/hello/:name' => '\\MyApp\\Controller\\Home:hello',
     ));
 
+### controller.class_suffix
+
+Optional class suffix for controller classes. Will be appended to routes.
+
+Using `Controller` as suffix with given routes:
+
+    $app->addRoutes(array(
+        '/'            => 'Home:index',
+        '/hello/:name' => 'Home:hello',
+    ));
+
+Translates to
+
+    $app->addRoutes(array(
+        '/'            => 'HomeController:index',
+        '/hello/:name' => 'HomeController:hello',
+    ));
+
 ### controller.method_suffix
 
 Optional method suffix. Appended to routes.
