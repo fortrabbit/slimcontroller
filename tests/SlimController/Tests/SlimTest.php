@@ -9,7 +9,18 @@ namespace SlimController\Tests;
 class SlimTest extends TestCase
 {
 
-    public function testAddRoutesWithOldSyntax()
+    public function testAddRoutesWithOldSyntaxWithoutMiddlewareArray()
+    {
+        $this->setUrl('/');
+        $this->app->addRoutes(array(
+            '/' => array('Home:index', function() {
+                //
+            })
+        ));
+        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+    }
+
+    public function testAddRoutesWithOldSyntaxWithMiddlewareArray()
     {
         $this->setUrl('/');
         $this->app->addRoutes(array(

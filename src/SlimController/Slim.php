@@ -79,7 +79,15 @@ class Slim extends \Slim\Slim
             // create array for simple request
             $routeArgs = (is_array($routeArgs)) ? $routeArgs : array('any' => $routeArgs);
 
+            if (array_keys($routeArgs) === range(0, count($routeArgs) - 1)) {
+                // route args is a sequential array not associative
+                $routeArgs = array('any' => array($routeArgs[0],
+                    is_array($routeArgs[1]) ? $routeArgs[1] : array_slice($routeArgs, 1))
+                );
+            }
+
             foreach ($routeArgs as $httpMethod => $classArgs) {
+
                 // assign vars if middleware callback exists
                 if(is_array($classArgs)) {
                     $classRoute       = $classArgs[0];
