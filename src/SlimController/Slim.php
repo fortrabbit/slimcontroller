@@ -82,7 +82,7 @@ class Slim extends \Slim\Slim
             if (array_keys($routeArgs) === range(0, count($routeArgs) - 1)) {
                 // route args is a sequential array not associative
                 $routeArgs = array('any' => array($routeArgs[0],
-                    is_array($routeArgs[1]) ? $routeArgs[1] : array_slice($routeArgs, 1))
+                    isset($routeArgs[1]) && is_array($routeArgs[1]) ? $routeArgs[1] : array_slice($routeArgs, 1))
                 );
             }
 
