@@ -6,6 +6,8 @@
 namespace SlimController\Tests;
 
 
+use SlimController\Tests\Fixtures\Controller\TestController;
+
 class SlimTest extends TestCase
 {
 
@@ -320,4 +322,30 @@ class SlimTest extends TestCase
         $this->assertEquals('/', $this->app->urlFor('this is not a named route'));
     }
 
+    public function testServiceControllersAreFetched()
+    {
+        $config = array(
+            'controller.class_prefix'    => '',
+            'controller.class_suffix'    => '',
+        );
+        $this->setUrl('/', '', $config);
+        $app = $this->app;
+        $app->container->singleton('InvalidClass', function () use ($app) {
+            return new TestController($app);
+        });
+
+        $route = $this->app->addControllerRoute(
+                '/', 'InvalidClass:index'
+            )
+            ->via('GET');
+        // If the route could be dispatched, the the service was found
+        $this->assertTrue($route->dispatch());
+
+        $app->addRoutes([
+            '/another/:name' => 'InvalidClass:hello'
+        ]);
+        $route = $app->router()->getNamedRoute('InvalidClass:hello');
+        $route->setParams(['name' => 'foo']);
+        $this->assertTrue($route->dispatch());
+    }
 }
