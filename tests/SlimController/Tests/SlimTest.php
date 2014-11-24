@@ -341,11 +341,11 @@ class SlimTest extends TestCase
         // If the route could be dispatched, then the service was found
         $this->assertTrue($route->dispatch());
 
-        $app->addRoutes([
+        $app->addRoutes(array(
             '/another/:name' => 'InvalidClass:hello'
-        ]);
+        ));
         $route = $app->router()->getNamedRoute('InvalidClass:hello');
-        $route->setParams(['name' => 'foo']);
+        $route->setParams(array('name' => 'foo'));
         $this->assertTrue($route->dispatch());
     }
 }
