@@ -171,7 +171,7 @@ class Slim extends \Slim\Slim
             // Get action arguments
             $args = func_get_args();
             // Try to fetch the instance from Slim's container, otherwise lazy-instantiate it
-            $instance = $this->container->has($controller) ? $this->container->get($controller) : new $controller($app);
+            $instance = $app->container->has($controller) ? $app->container->get($controller) : new $controller($app);
 
             return call_user_func_array(array($instance, $methodName), $args);
         };
