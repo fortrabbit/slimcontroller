@@ -338,7 +338,7 @@ class SlimTest extends TestCase
                 '/', 'InvalidClass:index'
             )
             ->via('GET');
-        // If the route could be dispatched, the the service was found
+        // If the route could be dispatched, then the service was found
         $this->assertTrue($route->dispatch());
 
         $app->addRoutes([
