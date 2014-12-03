@@ -8,6 +8,7 @@ namespace SlimController\Tests;
 
 use SlimController\Tests\Fixtures\Controller\TestController;
 
+
 class SlimTest extends TestCase
 {
 
@@ -324,28 +325,70 @@ class SlimTest extends TestCase
 
     public function testServiceControllersAreFetched()
     {
+        $this->expectOutputString("What is up?");
+
         $config = array(
             'controller.class_prefix'    => '',
             'controller.class_suffix'    => '',
         );
         $this->setUrl('/', '', $config);
         $app = $this->app;
-        $app->container->singleton('InvalidClass', function () use ($app) {
+        $app->container->singleton('TestController', function () use ($app) {
             return new TestController($app);
         });
 
         $route = $this->app->addControllerRoute(
-                '/', 'InvalidClass:index'
-            )
-            ->via('GET');
+            '/', 'TestController:index'
+        )->via('GET');
+
         // If the route could be dispatched, then the service was found
-        $this->assertTrue($route->dispatch());
+        $result = $route->dispatch();
+        $this->assertTrue($result);
+    }
+
+    public function testServiceControllersAreFetchedWithParams()
+    {
+        $this->expectOutputString("What is up foo?");
+
+        $config = array(
+            'controller.class_prefix'    => '',
+            'controller.class_suffix'    => '',
+        );
+        $this->setUrl('/', '', $config);
+        $app = $this->app;
+        $app->container->singleton('TestController', function () use ($app) {
+            return new TestController($app);
+        });
 
         $app->addRoutes(array(
-            '/another/:name' => 'InvalidClass:hello'
+            '/another/:name' => 'TestController:hello'
         ));
-        $route = $app->router()->getNamedRoute('InvalidClass:hello');
+        $route = $app->router()->getNamedRoute('TestController:hello');
         $route->setParams(array('name' => 'foo'));
         $this->assertTrue($route->dispatch());
     }
+
+    public function testServiceControllersAreFetchedEvenIfTheirNameIsAnInvalidPHPClassName()
+    {
+        $this->expectOutputString("What is up?");
+
+        $config = array(
+            'controller.class_prefix'    => '',
+            'controller.class_suffix'    => '',
+        );
+        $this->setUrl('/', '', $config);
+        $app = $this->app;
+        $app->container->singleton('String\\Controller', function () use ($app) {
+            return new TestController($app);
+        });
+
+        $route = $this->app->addControllerRoute(
+            '/', 'String\\Controller:index'
+        )->via('GET');
+
+        // If the route could be dispatched, then the service was found
+        $result = $route->dispatch();
+        $this->assertTrue($result);
+    }
+
 }
