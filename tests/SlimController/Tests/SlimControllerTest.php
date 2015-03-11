@@ -47,6 +47,28 @@ class SlimControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(true);
     }
 
+    public function tetNullSuffixRendersTemplateWithTwig()
+    {
+        $this->assertDefaultConstruction();
+        $this->slim->shouldReceive('render')
+            ->once()
+            ->with('rendertest.twig', array('foo' => 'orotound', 'bar' => 'grandios'));
+
+        $controller = new TestController($this->slim);
+        $controller->renderAction();
+    }
+
+    public function tetEmptySuffixRendersTemplateWithoutSuffix()
+    {
+        $this->assertDefaultConstruction('');
+        $this->slim->shouldReceive('render')
+            ->once()
+            ->with('rendertest', array('foo' => 'orotound', 'bar' => 'grandios'));
+
+        $controller = new TestController($this->slim);
+        $controller->renderAction();
+    }
+
     public function testRenderingWorksFine()
     {
         $this->assertDefaultConstruction();

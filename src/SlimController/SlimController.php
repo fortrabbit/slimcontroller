@@ -58,8 +58,8 @@ abstract class SlimController
     private $paramsPost = null;
 
     /**
-     * Suffix was never specified and defaults to empty string 
-     * 
+     * Suffix was never specified and defaults to empty string
+     *
      * @var string
      */
     protected $renderTemplateSuffix = 'twig';
@@ -72,7 +72,7 @@ abstract class SlimController
     public function __construct(\Slim\Slim &$app)
     {
         $this->app = $app;
-        if ($renderTemplateSuffix = $app->config('controller.template_suffix')) {
+        if (!is_null($renderTemplateSuffix = $app->config('controller.template_suffix'))) {
             $this->renderTemplateSuffix = $renderTemplateSuffix;
         }
         if (!is_null($paramPrefix = $app->config('controller.param_prefix'))) {
@@ -97,6 +97,7 @@ abstract class SlimController
     {
         if (!is_null($this->renderTemplateSuffix)
             && !preg_match('/\.' . $this->renderTemplateSuffix . '$/', $template)
+            && $this->renderTemplateSuffix !== ''
         ) {
             $template .= '.' . $this->renderTemplateSuffix;
         }
