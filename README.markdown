@@ -15,7 +15,7 @@ Create a `composer.json` file
 
     {
         "require": {
-            "slimcontroller/slimcontroller": "0.4.2"
+            "slimcontroller/slimcontroller": "0.4.3"
         },
         "autoload": {
             "psr-0": {
