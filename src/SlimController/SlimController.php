@@ -18,10 +18,8 @@ namespace SlimController;
  * Implements a basic controller functionallity.
  * It should not be instanciated directly but extended from.
  */
-
 abstract class SlimController
 {
-
     /**
      * @const string
      */
@@ -58,8 +56,8 @@ abstract class SlimController
     private $paramsPost = null;
 
     /**
-     * Suffix was never specified and defaults to empty string 
-     * 
+     * Suffix was never specified and defaults to empty string
+     *
      * @var string
      */
     protected $renderTemplateSuffix = 'twig';
@@ -123,14 +121,13 @@ abstract class SlimController
         return $this->app->request();
     }
 
-
     /**
      * Returns a single parameter of the "data[Object][Key]" format.
      *
      * <code>
-    $paramValue = $this->param('prefix.name'); // prefix[name] -> "string value"
-    $paramValue = $this->param('prefix.name', 'post'); // prefix[name] -> "string value"
-    $paramValue = $this->param('prefix.name', 'get'); // prefix[name] -> "string value"
+     * $paramValue = $this->param('prefix.name'); // prefix[name] -> "string value"
+     * $paramValue = $this->param('prefix.name', 'post'); // prefix[name] -> "string value"
+     * $paramValue = $this->param('prefix.name', 'get'); // prefix[name] -> "string value"
      * </code>
      *
      * @param mixed $name    Name of the parameter
@@ -165,7 +162,6 @@ abstract class SlimController
 
         return null;
     }
-
 
     /**
      * Reads multiple params at once
@@ -245,7 +241,6 @@ abstract class SlimController
     private function flattenInner(array $data, $prefix = '', &$flat = array())
     {
         foreach ($data as $key => $value) {
-
             // is array -> flatten deep
             if (is_array($value)) {
                 $this->flattenInner($value, $prefix . $key . '.', $flat);
@@ -257,7 +252,6 @@ abstract class SlimController
 
         return $flat;
     }
-
 
     private function paramAccessorMeth($reqMode = null)
     {
@@ -286,5 +280,4 @@ abstract class SlimController
 
         return $names;
     }
-
 }
