@@ -122,6 +122,16 @@ abstract class SlimController
     }
 
     /**
+     * Slim's response object
+     *
+     * @return \Slim\Http\Response
+     */
+    protected function response()
+    {
+        return $this->app->response();
+    }
+
+    /**
      * Returns a single parameter of the "data[Object][Key]" format.
      *
      * <code>
