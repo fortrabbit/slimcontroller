@@ -19,7 +19,6 @@ namespace SlimController;
  */
 class Slim extends \Slim\Slim
 {
-
     /**
      * @var array
      */
@@ -92,9 +91,8 @@ class Slim extends \Slim\Slim
             }
 
             foreach ($routeArgs as $httpMethod => $classArgs) {
-
                 // assign vars if middleware callback exists
-                if(is_array($classArgs)) {
+                if (is_array($classArgs)) {
                     $classRoute       = $classArgs[0];
                     $localMiddlewares = is_array($classArgs[1]) ? $classArgs[1] : array_slice($classArgs, 1);
                 } else {
@@ -187,7 +185,6 @@ class Slim extends \Slim\Slim
      */
     protected function determineClassAndMethod($classMethod)
     {
-
         // determine class prefix (eg "\Vendor\Bundle\Controller") and suffix (eg "Controller")
         $classNamePrefix = $this->config('controller.class_prefix');
         if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== '\\')) {
@@ -211,11 +208,11 @@ class Slim extends \Slim\Slim
             $methodName = $match[2] . $methodNameSuffix;
         } // malformed
         else {
-            throw new \InvalidArgumentException("Malformed class action for '$classMethod'. Use 'className:methodName' format.");
+            throw new \InvalidArgumentException(
+                "Malformed class action for '$classMethod'. Use 'className:methodName' format."
+            );
         }
 
         return array($className, $methodName);
     }
-
-
 }
