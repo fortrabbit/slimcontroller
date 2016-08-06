@@ -83,6 +83,9 @@ abstract class SlimController
         if ($app->config('controller.cleanup_params')) {
             $this->paramCleanup = true;
         }
+        if (method_exists($this, 'setUp')) {
+            $this->setUp();
+        }
     }
 
     /**
