@@ -14,6 +14,8 @@
 
 namespace SlimController;
 
+use Slim\Http\Response;
+
 /**
  * Extended Slim base
  */
@@ -171,7 +173,18 @@ class Slim extends \Slim\Slim
             // Try to fetch the instance from Slim's container, otherwise lazy-instantiate it
             $instance = $app->container->has($controller) ? $app->container->get($controller) : new $controller($app);
 
-            return call_user_func_array(array($instance, $methodName), $args);
+            $result = call_user_func_array(array($instance, $methodName), $args);
+            if ($result instanceof Response) {
+                $container['response'] = $result;
+
+                return true;
+            } elseif (is_string($result)) {
+                $container['response'] = new Response($result);
+
+                return true;
+            }
+
+            return $result;
         };
 
         return $callable;
