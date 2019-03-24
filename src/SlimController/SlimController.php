@@ -102,6 +102,25 @@ abstract class SlimController
     }
 
     /**
+     * Renders given data into JSON string, which is then set as response body
+     *
+     * @param mixed $data Data to be encoded into JSON string
+     * @param int $statusCode HTTP status code
+     */
+    protected function jsonResponse($data, $statusCode = 200)
+    {
+        $jsonBody = json_encode($data);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->app->getLog()->error("Failed to encode data to JSON: " . json_last_error_msg());
+
+            throw new \InvalidArgumentException(json_last_error_msg());
+        }
+        $this->app->response->setBody($jsonBody);
+        $this->app->response->header('Content-Type', 'application/json');
+        $this->app->response->setStatus($statusCode);
+    }
+
+    /**
      * Performs redirect
      *
      * @param string $path
