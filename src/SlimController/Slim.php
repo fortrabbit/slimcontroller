@@ -17,7 +17,7 @@ namespace SlimController;
 /**
  * Extended Slim base
  */
-class Slim extends \Slim\Slim
+class Slim extends \Slim\App
 {
 
     /**

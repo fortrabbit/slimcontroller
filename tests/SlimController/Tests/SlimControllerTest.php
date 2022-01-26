@@ -18,7 +18,7 @@ class SlimControllerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->slim = m::mock(\Slim\Slim::class);
+        $this->slim = m::mock(\Slim\App::class);
         parent::setUp();
     }
 
