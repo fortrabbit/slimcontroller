@@ -317,7 +317,7 @@ class SlimTest extends TestCase
         );
         $this->setUrl('/', '', $config);
         $app = $this->app;
-        $app->container->singleton('TestController', fn() => new TestController($app));
+        $app->getContainer()['TestController'] = fn() => new TestController($app);
 
         $route = $this->app->addControllerRoute(
             'GET', '/', 'TestController:index'
@@ -338,7 +338,7 @@ class SlimTest extends TestCase
         );
         $this->setUrl('/', '', $config);
         $app = $this->app;
-        $app->container->singleton('TestController', fn() => new TestController($app));
+        $app->getContainer()['TestController'] = fn() => new TestController($app);
 
         $app->addRoutes(array(
             '/another/:name' => 'TestController:hello'
@@ -358,7 +358,7 @@ class SlimTest extends TestCase
         );
         $this->setUrl('/', '', $config);
         $app = $this->app;
-        $app->container->singleton('String\\Controller', fn() => new TestController($app));
+        $app->getContainer()['String\\Controller'] = fn() => new TestController($app);
 
         $route = $this->app->addControllerRoute(
             'GET', '/', 'String\\Controller:index'
