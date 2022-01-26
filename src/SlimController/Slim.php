@@ -108,19 +108,20 @@ class Slim extends \Slim\App
                     throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
                 }
 
+                if ('any' === $httpMethod) {
+                    $httpMethod = static::$ALLOWED_HTTP_METHODS;
+                } else {
+                    $httpMethod = [ $httpMethod ];
+                }
+
                 $routeMiddlewares = array_merge($localMiddlewares, $globalMiddlewares);
-                $route = $this->addControllerRoute($path, $classRoute, $routeMiddlewares);
+                $route = $this->addControllerRoute($httpMethod, $path, $classRoute, $routeMiddlewares);
 
                 if (!isset($this->routeNames[$classRoute])) {
                     $route->name($classRoute);
                     $this->routeNames[$classRoute] = 1;
                 }
 
-                if ('any' === $httpMethod) {
-                    call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
-                } else {
-                    $route->via($httpMethod);
-                }
             }
         }
 
@@ -131,11 +132,11 @@ class Slim extends \Slim\App
      * Add a new controller route
      *
      * <code>
-     * $app->addControllerRoute("/the/path", "className:methodName", array(function () { doSome(); }))
-     *  ->via('GET')->condition(..);
+     * $app->addControllerRoute(['GET'], "/the/path", "className:methodName", array(function () { doSome(); }))
+     *  ->condition(..);
      *
-     * $app->addControllerRoute("/the/path", "className:methodName")
-     * ->via('GET')->condition(..);
+     * $app->addControllerRoute(['GET'], "/the/path", "className:methodName")
+     * ->condition(..);
      * </code>
      *
      * @param string     $path
@@ -144,7 +145,7 @@ class Slim extends \Slim\App
      *
      * @return \Slim\Route
      */
-    public function addControllerRoute($path, $route, array $middleware = array())
+    public function addControllerRoute($methods, $path, $route, array $middleware = array())
     {
         $callback = $this->buildCallbackFromControllerRoute($route);
 
@@ -189,14 +190,14 @@ class Slim extends \Slim\App
     {
 
         // determine class prefix (eg "\Vendor\Bundle\Controller") and suffix (eg "Controller")
-        $classNamePrefix = $this->config('controller.class_prefix');
+        $classNamePrefix = $this->getContainer()->get('settings')['controller.class_prefix'];
         if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== 0)) {
             $classNamePrefix .= '\\';
         }
-        $classNameSuffix = $this->config('controller.class_suffix') ? : '';
+        $classNameSuffix = $this->getContainer()->get('settings')['controller.class_suffix'] ? : '';
 
         // determine method suffix or default to "Action"
-        $methodNameSuffix = $this->config('controller.method_suffix');
+        $methodNameSuffix = $this->getContainer()->get('settings')['controller.method_suffix'];
         if (is_null($methodNameSuffix)) {
             $methodNameSuffix = 'Action';
         }

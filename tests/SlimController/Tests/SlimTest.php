@@ -253,8 +253,9 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/');
         $this->app->addControllerRoute(
+            'GET',
             '/', 'Controller:index'
-        )->via('GET');
+        );
 
         static::assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
@@ -263,10 +264,11 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/');
         $this->app->addControllerRoute(
+            'GET',
             '/', 'Controller:index', array(
                 fn() => false,
             )
-        )->via('GET');
+            );
 
         /** @var \Slim\Route[] $routes */
         $routes = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
@@ -318,8 +320,8 @@ class SlimTest extends TestCase
         $app->container->singleton('TestController', fn() => new TestController($app));
 
         $route = $this->app->addControllerRoute(
-            '/', 'TestController:index'
-        )->via('GET');
+            'GET', '/', 'TestController:index'
+        );
 
         // If the route could be dispatched, then the service was found
         $result = $route->dispatch();
@@ -359,8 +361,8 @@ class SlimTest extends TestCase
         $app->container->singleton('String\\Controller', fn() => new TestController($app));
 
         $route = $this->app->addControllerRoute(
-            '/', 'String\\Controller:index'
-        )->via('GET');
+            'GET', '/', 'String\\Controller:index'
+        );
 
         // If the route could be dispatched, then the service was found
         $result = $route->dispatch();
