@@ -6,6 +6,9 @@ class ParamsTest extends TestCase
 {
 
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsSingle()
     {
         $this->expectOutputString('Param is 123');
@@ -13,12 +16,15 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramSingle',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsSingleObject()
     {
         $this->expectOutputString('Param is 123123123');
@@ -26,11 +32,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramSingleObject',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsMulti()
     {
         $this->expectOutputString('All is foo bar');
@@ -38,11 +47,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramMulti',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsMultiMissing()
     {
         $this->expectOutputString('All is foo bar');
@@ -50,11 +62,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramMultiMissing',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsMultiMissingReq()
     {
         $this->expectOutputString('OK');
@@ -62,11 +77,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramMultiMissingReq',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsMultiDefault()
     {
         $this->expectOutputString('All is foo bar and great');
@@ -74,11 +92,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramMultiDefault',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsDifferentPrefix()
     {
         $this->expectOutputString('GOT OK');
@@ -88,11 +109,14 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramDifferentPrefix',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testParamsNoPrefix()
     {
         $this->expectOutputString('All params: data.Foo=bar - other.Foo=bar');
@@ -102,7 +126,7 @@ class ParamsTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Test:paramNoPrefix',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }

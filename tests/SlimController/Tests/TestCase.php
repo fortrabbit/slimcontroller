@@ -7,7 +7,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SlimController\Slim;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends  \PHPUnit\Framework\TestCase
 {
 
     /**

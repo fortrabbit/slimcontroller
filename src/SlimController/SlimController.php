@@ -25,7 +25,7 @@ abstract class SlimController
     /**
      * @const string
      */
-    const VERSION = '0.1.4';
+    public const VERSION = '0.1.4';
 
     /**
      * @var Slim
@@ -40,22 +40,22 @@ abstract class SlimController
     /**
      * @var string Prefix for params
      */
-    private $paramPrefix = 'data.';
+    private string $paramPrefix = 'data.';
 
     /**
      * @var array Stash of GET & POST params
      */
-    private $paramsParams = null;
+    private ?array $paramsParams = null;
 
     /**
      * @var array Stash of GET params
      */
-    private $paramsGet = null;
+    private ?array $paramsGet = null;
 
     /**
      * @var array Stash of POST params
      */
-    private $paramsPost = null;
+    private ?array $paramsPost = null;
 
     /**
      * Suffix was never specified and defaults to empty string 
@@ -277,11 +277,7 @@ abstract class SlimController
         $names    = array_keys($namesPre);
         if ($prefix = $this->paramPrefix) {
             $prefixLen = strlen($prefix);
-            $names     = array_map(function ($key) use ($prefixLen) {
-                return substr($key, $prefixLen);
-            }, array_filter($names, function ($in) use ($prefix) {
-                return strpos($in, $prefix) === 0;
-            }));
+            $names     = array_map(fn($key) => substr($key, $prefixLen), array_filter($names, fn($in) => strpos($in, $prefix) === 0));
         }
 
         return $names;

@@ -11,17 +11,17 @@ class RoutingTest extends TestCase
         $this->app->addRoutes(array(
             '/' => 'Controller:index',
         ));
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
 
         $this->setUrl('/foo');
-        $this->assertEquals(0, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(0, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
 
         $this->setUrl('/other');
 
         $this->app->addRoutes(array(
             '/other' => 'Controller:other',
         ));
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
     public function testRoutesWithVariables()
@@ -30,7 +30,7 @@ class RoutingTest extends TestCase
         $this->app->addRoutes(array(
             '/hello/:name' => 'Controller:index',
         ));
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
     public function testRoutesWithExtendedFormat()
@@ -39,7 +39,7 @@ class RoutingTest extends TestCase
         $this->app->addRoutes(array(
             '/bla' => array('Controller:index', 'get')
         ));
-        $this->assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(1, count($this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
     }
 
 }

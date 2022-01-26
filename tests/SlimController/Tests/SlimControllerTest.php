@@ -9,20 +9,20 @@ use Mockery as m;
 use SlimController\SlimController;
 use SlimController\Tests\Fixtures\Controller\TestController;
 
-class SlimControllerTest extends \PHPUnit_Framework_TestCase
+class SlimControllerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Mockery\MockInterface
      */
     protected $slim;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->slim = m::mock('\Slim\Slim');
+        $this->slim = m::mock(\Slim\Slim::class);
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->addToAssertionCount($this->slim->mockery_getExpectationCount());
         m::close();
@@ -44,7 +44,7 @@ class SlimControllerTest extends \PHPUnit_Framework_TestCase
             ->with('controller.cleanup_params')
             ->andReturnNull();
         $controller = new TestController($this->slim);
-        $this->assertTrue(true);
+        static::assertTrue(true);
     }
 
     public function testRenderingWorksFine()

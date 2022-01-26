@@ -165,7 +165,7 @@ class Slim extends \Slim\Slim
      */
     protected function buildCallbackFromControllerRoute($route)
     {
-        list($controller, $methodName) = $this->determineClassAndMethod($route);
+        [$controller, $methodName] = $this->determineClassAndMethod($route);
         $app      = & $this;
         $callable = function () use ($app, $controller, $methodName) {
             // Get action arguments
@@ -190,7 +190,7 @@ class Slim extends \Slim\Slim
 
         // determine class prefix (eg "\Vendor\Bundle\Controller") and suffix (eg "Controller")
         $classNamePrefix = $this->config('controller.class_prefix');
-        if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== '\\')) {
+        if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== 0)) {
             $classNamePrefix .= '\\';
         }
         $classNameSuffix = $this->config('controller.class_suffix') ? : '';

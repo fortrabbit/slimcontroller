@@ -5,6 +5,9 @@ namespace SlimController\Tests;
 class ControllerTest extends TestCase
 {
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testControllerSimple()
     {
         $this->expectOutputString('What is up?');
@@ -13,11 +16,14 @@ class ControllerTest extends TestCase
             '/' => 'Test:index',
         ));
 
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testControllerExtended()
     {
         $this->expectOutputString('What is up YOU?');
@@ -25,11 +31,14 @@ class ControllerTest extends TestCase
         $this->app->addRoutes(array(
             '/hello/:name' => 'Test:hello',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testControllerAbsPath()
     {
         $this->expectOutputString('What is up YOU?');
@@ -37,7 +46,7 @@ class ControllerTest extends TestCase
         $this->app->addRoutes(array(
             '/hello/:name' => 'Test:hello',
         ));
-        list($route) = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->router()->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
         //$this->app->router()->dispatch($route);
         $route->dispatch();
     }
