@@ -2,7 +2,7 @@
 
 namespace SlimController\Tests;
 
-use Slim\Environment;
+use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SlimController\Slim;
@@ -33,7 +33,7 @@ class TestCase extends  \PHPUnit\Framework\TestCase
 
     protected function setUrl($path, $params = '', $config = array())
     {
-        Environment::mock(array(
+        $this->env = Environment::mock(array(
             'REQUEST_METHOD'  => 'GET',
             'REMOTE_ADDR'     => '127.0.0.1',
             'SCRIPT_NAME'     => '', //<-- Physical
@@ -46,8 +46,7 @@ class TestCase extends  \PHPUnit\Framework\TestCase
             'slim.errors'     => fopen('php://stderr', 'w'),
             'HTTP_HOST'       => 'slim'
         ));
-        $this->env = Environment::getInstance();
-        $this->req = new Request($this->env);
+        $this->req = Request::createFromEnvironment($this->env);
         $this->res = new Response();
         $this->app = new Slim(array_merge(array(
             'controller.class_prefix'    => '\\SlimController\\Tests\\Fixtures\\Controller',
@@ -56,5 +55,6 @@ class TestCase extends  \PHPUnit\Framework\TestCase
             'controller.template_suffix' => 'php',
             'templates.path'             => __DIR__ . '/Fixtures/templates'
         ), $config));
+
     }
 }
