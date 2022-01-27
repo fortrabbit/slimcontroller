@@ -300,12 +300,13 @@ class SlimTest extends TestCase
         $this->app->addRoutes(array(
             '/'              => 'Controller:index',
             '/bla'           => 'Bla:Index',
-            '/something/:id' => 'Something:show'
+            '/something[/{id}]' => 'Something:show'
         ));
 
         static::assertEquals('/', $this->app->getContainer()->get('router')->pathFor('Controller:index'));
         static::assertEquals('/bla', $this->app->getContainer()->get('router')->pathFor('Bla:Index'));
-        static::assertEquals('/something/{id}', $this->app->getContainer()->get('router')->pathFor('Something:show'));
+        static::assertEquals('/something', $this->app->getContainer()->get('router')->pathFor('Something:show'));
+        static::assertEquals('/something/10', $this->app->getContainer()->get('router')->pathFor('Something:show', [ 'id' => 10]));
     }
 
     public function testNamedRoutesThrowsExceptionIfLookingForARouteThatDoesNotExist()
