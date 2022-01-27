@@ -312,12 +312,12 @@ class SlimTest extends TestCase
     public function testNamedRoutesThrowsExceptionIfLookingForARouteThatDoesNotExist()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Named route not found for name: this is not a named route');
+        $this->expectExceptionMessage('Named route does not exist for name: this is not a named route');
         $this->setUrl('/');
         $this->app->addRoutes(array(
             '/'              => 'Controller:index',
             '/bla'           => 'Bla:Index',
-            '/something/:id' => 'Something:show'
+            '/something/{id}' => 'Something:show'
         ));
 
         static::assertEquals('/', $this->app->getContainer()->get('router')->pathFor('this is not a named route'));
