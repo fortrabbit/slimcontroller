@@ -23,7 +23,7 @@ abstract class SlimController
     /**
      * @const string
      */
-    const VERSION = '0.1.4';
+    public const VERSION = '0.1.4';
 
     /**
      * @var Slim
@@ -38,22 +38,22 @@ abstract class SlimController
     /**
      * @var string Prefix for params
      */
-    private $paramPrefix = 'data.';
+    private string $paramPrefix = 'data.';
 
     /**
      * @var array Stash of GET & POST params
      */
-    private $paramsParams = null;
+    private ?array $paramsParams = null;
 
     /**
      * @var array Stash of GET params
      */
-    private $paramsGet = null;
+    private ?array $paramsGet = null;
 
     /**
      * @var array Stash of POST params
      */
-    private $paramsPost = null;
+    private ?array $paramsPost = null;
 
     /**
      * Suffix was never specified and defaults to empty string
@@ -65,22 +65,22 @@ abstract class SlimController
     /**
      * Constructor for TodoQueue\Controller\Login
      *
-     * @param \Slim\Slim $app Ref to slim app
+     * @param \Slim\App $app Ref to slim app
      */
-    public function __construct(\Slim\Slim &$app)
+    public function __construct(\Slim\App &$app)
     {
         $this->app = $app;
-        if ($renderTemplateSuffix = $app->config('controller.template_suffix')) {
+        if ($renderTemplateSuffix = $app->getContainer()->get('settings')['controller.template_suffix']) {
             $this->renderTemplateSuffix = $renderTemplateSuffix;
         }
-        if (!is_null($paramPrefix = $app->config('controller.param_prefix'))) {
+        if (!is_null($paramPrefix = $app->getContainer()->get('settings')['controller.param_prefix'])) {
             $this->paramPrefix = $paramPrefix;
             $prefixLength      = strlen($this->paramPrefix);
             if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.') {
                 $this->paramPrefix .= '.';
             }
         }
-        if ($app->config('controller.cleanup_params')) {
+        if ($app->getContainer()->get('settings')['controller.cleanup_params']) {
             $this->paramCleanup = true;
         }
     }
@@ -281,11 +281,7 @@ abstract class SlimController
         $names    = array_keys($namesPre);
         if ($prefix = $this->paramPrefix) {
             $prefixLen = strlen($prefix);
-            $names     = array_map(function ($key) use ($prefixLen) {
-                return substr($key, $prefixLen);
-            }, array_filter($names, function ($in) use ($prefix) {
-                return strpos($in, $prefix) === 0;
-            }));
+            $names     = array_map(fn($key) => substr($key, $prefixLen), array_filter($names, fn($in) => strpos($in, $prefix) === 0));
         }
 
         return $names;

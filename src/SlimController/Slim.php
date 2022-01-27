@@ -17,7 +17,7 @@ namespace SlimController;
 /**
  * Extended Slim base
  */
-class Slim extends \Slim\Slim
+class Slim extends \Slim\App
 {
     /**
      * @var array
@@ -106,19 +106,20 @@ class Slim extends \Slim\Slim
                     throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
                 }
 
+                if ('ANY' === $httpMethod) {
+                    $httpMethod = static::$ALLOWED_HTTP_METHODS;
+                } else {
+                    $httpMethod = [ $httpMethod ];
+                }
+
                 $routeMiddlewares = array_merge($localMiddlewares, $globalMiddlewares);
-                $route = $this->addControllerRoute($path, $classRoute, $routeMiddlewares);
+                $route = $this->addControllerRoute($httpMethod, $path, $classRoute, $routeMiddlewares);
 
                 if (!isset($this->routeNames[$classRoute])) {
-                    $route->name($classRoute);
+                    $route->setName($classRoute);
                     $this->routeNames[$classRoute] = 1;
                 }
 
-                if ('any' === $httpMethod) {
-                    call_user_func_array(array($route, 'via'), static::$ALLOWED_HTTP_METHODS);
-                } else {
-                    $route->via($httpMethod);
-                }
             }
         }
 
@@ -129,11 +130,11 @@ class Slim extends \Slim\Slim
      * Add a new controller route
      *
      * <code>
-     * $app->addControllerRoute("/the/path", "className:methodName", array(function () { doSome(); }))
-     *  ->via('GET')->condition(..);
+     * $app->addControllerRoute(['GET'], "/the/path", "className:methodName", array(function () { doSome(); }))
+     *  ->condition(..);
      *
-     * $app->addControllerRoute("/the/path", "className:methodName")
-     * ->via('GET')->condition(..);
+     * $app->addControllerRoute(['GET'], "/the/path", "className:methodName")
+     * ->condition(..);
      * </code>
      *
      * @param string     $path
@@ -142,11 +143,13 @@ class Slim extends \Slim\Slim
      *
      * @return \Slim\Route
      */
-    public function addControllerRoute($path, $route, array $middleware = array())
+    public function addControllerRoute($methods, $path, $route, array $middleware = array())
     {
         $callback = $this->buildCallbackFromControllerRoute($route);
 
+        $methods = is_array($methods) ? $methods : [ $methods ];
         array_unshift($middleware, $path);
+        array_unshift($middleware, $methods);
         array_push($middleware, $callback);
 
         $route = call_user_func_array(array($this, 'map'), $middleware);
@@ -163,13 +166,13 @@ class Slim extends \Slim\Slim
      */
     protected function buildCallbackFromControllerRoute($route)
     {
-        list($controller, $methodName) = $this->determineClassAndMethod($route);
+        [$controller, $methodName] = $this->determineClassAndMethod($route);
         $app      = & $this;
         $callable = function () use ($app, $controller, $methodName) {
             // Get action arguments
             $args = func_get_args();
             // Try to fetch the instance from Slim's container, otherwise lazy-instantiate it
-            $instance = $app->container->has($controller) ? $app->container->get($controller) : new $controller($app);
+            $instance = $app->getContainer()->has($controller) ? $app->getContainer()->get($controller) : new $controller($app);
 
             return call_user_func_array(array($instance, $methodName), $args);
         };
@@ -186,14 +189,14 @@ class Slim extends \Slim\Slim
     protected function determineClassAndMethod($classMethod)
     {
         // determine class prefix (eg "\Vendor\Bundle\Controller") and suffix (eg "Controller")
-        $classNamePrefix = $this->config('controller.class_prefix');
-        if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== '\\')) {
+        $classNamePrefix = $this->getContainer()->get('settings')['controller.class_prefix'];
+        if ($classNamePrefix && substr($classNamePrefix, -strlen($classNamePrefix) !== 0)) {
             $classNamePrefix .= '\\';
         }
-        $classNameSuffix = $this->config('controller.class_suffix') ? : '';
+        $classNameSuffix = $this->getContainer()->get('settings')['controller.class_suffix'] ? : '';
 
         // determine method suffix or default to "Action"
-        $methodNameSuffix = $this->config('controller.method_suffix');
+        $methodNameSuffix = $this->getContainer()->get('settings')['controller.method_suffix'];
         if (is_null($methodNameSuffix)) {
             $methodNameSuffix = 'Action';
         }
