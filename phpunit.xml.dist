@@ -12,7 +12,6 @@
     <testsuites>
         <testsuite name="Unit Tests">
             <directory>./tests/SlimController/Tests</directory>
-            <exclude>./tests/SlimController/Tests/Old/</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
