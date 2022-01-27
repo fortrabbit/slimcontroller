@@ -261,8 +261,7 @@ class SlimTest extends TestCase
         $this->app->addRoutes(array(
             '/bla' => 'Test:notSuffixedMethod'
         ));
-        [$route] = $this->app->getContainer()->get('router')->dispatch($this->req);
-        $route->dispatch();
+        ($this->app)($this->req, $this->res);
     }
 
     public function testAddControllerRoute()
