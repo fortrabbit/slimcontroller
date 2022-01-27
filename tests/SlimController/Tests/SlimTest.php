@@ -353,17 +353,20 @@ class SlimTest extends TestCase
         $config = array(
             'controller.class_prefix'    => '',
             'controller.class_suffix'    => '',
-        );
-        $this->setUrl('/', '', $config);
+    );
+        $this->setUrl('/another/foo', '', $config);
         $app = $this->app;
-        $app->getContainer()['TestController'] = fn() => new TestController($app);
+        $app->getContainer()['TestController'] = fn () => new TestController($app);
 
-        $app->addRoutes(array(
-            '/another/:name' => 'TestController:hello'
-        ));
-        $route = $app->container->get('router')->getNamedRoute('TestController:hello');
-        $route->setParams(array('name' => 'foo'));
-        static::assertTrue($route->dispatch());
+        $route = $this->app->addControllerRoute(
+            'GET',
+            '/another/{name}',
+            'TestController:hello'
+        );
+
+        // If the route could be dispatched, then the service was found
+        $result = ($this->app)($this->req, $this->res);
+        static::assertEquals(200, $result->getStatusCode());
     }
 
     public function testServiceControllersAreFetchedEvenIfTheirNameIsAnInvalidPHPClassName()
