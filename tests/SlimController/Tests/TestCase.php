@@ -31,7 +31,7 @@ class TestCase extends  \PHPUnit\Framework\TestCase
     protected $app;
 
 
-    protected function setUrl($path, $params = '', $config = array())
+    protected function setUrl($path, $params = '', $settings = array())
     {
         $this->env = Environment::mock(array(
             'REQUEST_URI'     => $path,
@@ -41,13 +41,15 @@ class TestCase extends  \PHPUnit\Framework\TestCase
         ));
         $this->req = Request::createFromEnvironment($this->env);
         $this->res = new Response();
-        $this->app = new Slim(array_merge(array(
-            'controller.class_prefix'    => '\\SlimController\\Tests\\Fixtures\\Controller',
-            'controller.class_suffix'    => 'Controller',
-            'controller.method_suffix'   => 'Action',
-            'controller.template_suffix' => 'php',
-            'templates.path'             => __DIR__ . '/Fixtures/templates'
-        ), $config));
-
+        $this->app = new Slim(array(
+                'settings' => array_merge(array(
+                    'controller.class_prefix'    => '\\SlimController\\Tests\\Fixtures\\Controller',
+                    'controller.class_suffix'    => 'Controller',
+                    'controller.method_suffix'   => 'Action',
+                    'controller.template_suffix' => 'php',
+                    'templates.path'             => __DIR__ . '/Fixtures/templates'
+                ), $settings)
+            )
+        );
     }
 }
