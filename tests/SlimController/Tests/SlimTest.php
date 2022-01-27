@@ -325,7 +325,7 @@ class SlimTest extends TestCase
         static::assertEquals('/', $this->app->getContainer()->get('router')->pathFor('this is not a named route'));
     }
 
-    public function testServiceControllersAreFetched()
+    public function testServiceControllersAreFetchedSimple()
     {
         $this->expectOutputString("What is up?");
 
@@ -342,8 +342,8 @@ class SlimTest extends TestCase
         );
 
         // If the route could be dispatched, then the service was found
-        $result = $route->dispatch();
-        static::assertTrue($result);
+        $result = ($this->app)($this->req, $this->res);
+        static::assertEquals(200, $result->getStatusCode());
     }
 
     public function testServiceControllersAreFetchedWithParams()
