@@ -264,7 +264,7 @@ class SlimTest extends TestCase
         ($this->app)($this->req, $this->res);
     }
 
-    public function testAddControllerRoute()
+    public function testAddControllerRouteSimple()
     {
         $this->setUrl('/');
         $this->app->addControllerRoute(
@@ -272,7 +272,10 @@ class SlimTest extends TestCase
             '/', 'Controller:index'
         );
 
+        static::assertEquals(
+            \FastRoute\Dispatcher::FOUND,
             $this->app->getContainer()->get('router')->dispatch($this->req)[0]
+        );
     }
 
     public function testAddControllerRouteWithMiddleware()
