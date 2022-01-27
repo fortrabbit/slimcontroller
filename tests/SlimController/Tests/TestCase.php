@@ -34,15 +34,8 @@ class TestCase extends  \PHPUnit\Framework\TestCase
     protected function setUrl($path, $params = '', $config = array())
     {
         $this->env = Environment::mock(array(
-            'REQUEST_METHOD'  => 'GET',
-            'REMOTE_ADDR'     => '127.0.0.1',
-            'SCRIPT_NAME'     => '', //<-- Physical
-            'PATH_INFO'       => $path, //<-- Virtual
+            'REQUEST_URI'     => $path,
             'QUERY_STRING'    => $params,
-            'SERVER_NAME'     => 'slim',
-            'SERVER_PORT'     => 80,
-            'slim.url_scheme' => 'http',
-            'slim.input'      => '',
             'slim.errors'     => fopen('php://stderr', 'w'),
             'HTTP_HOST'       => 'slim'
         ));
