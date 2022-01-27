@@ -149,7 +149,9 @@ class Slim extends \Slim\App
     {
         $callback = $this->buildCallbackFromControllerRoute($route);
 
+        $methods = is_array($methods) ? $methods : [ $methods ];
         array_unshift($middleware, $path);
+        array_unshift($middleware, $methods);
         array_push($middleware, $callback);
 
         $route = call_user_func_array(array($this, 'map'), $middleware);
