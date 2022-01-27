@@ -249,7 +249,7 @@ class SlimTest extends TestCase
         $this->app->addRoutes(array(
             '/bla' => 'Test:index'
         ));
-        $route = $this->app->getContainer()->get('router')->dispatch($this->req);
+        ($this->app)($this->req, $this->res);
     }
 
     public function testEmptyButNotNullMethodSuffixAccepted()
