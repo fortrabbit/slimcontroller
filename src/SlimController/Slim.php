@@ -108,7 +108,7 @@ class Slim extends \Slim\App
                     throw new \InvalidArgumentException("Http method '$httpMethod' is not supported.");
                 }
 
-                if ('any' === $httpMethod) {
+                if ('ANY' === $httpMethod) {
                     $httpMethod = static::$ALLOWED_HTTP_METHODS;
                 } else {
                     $httpMethod = [ $httpMethod ];
@@ -118,7 +118,7 @@ class Slim extends \Slim\App
                 $route = $this->addControllerRoute($httpMethod, $path, $classRoute, $routeMiddlewares);
 
                 if (!isset($this->routeNames[$classRoute])) {
-                    $route->name($classRoute);
+                    $route->setName($classRoute);
                     $this->routeNames[$classRoute] = 1;
                 }
 
