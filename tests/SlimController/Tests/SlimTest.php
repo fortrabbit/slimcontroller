@@ -21,10 +21,10 @@ class SlimTest extends TestCase
 
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
         // $this->assertTrue($this->app->router->hasNamedRoute('Controller:index'));
-        static::assertEquals('/bla', $this->app->container->get('router')->pathFor('Controller:index'));
+        static::assertEquals('/bla', $this->app->getContainer()->get('router')->pathFor('Controller:index'));
     }
 
     public function testAddingroutesWithOldSyntaxWithoutMiddlewares()
@@ -36,7 +36,7 @@ class SlimTest extends TestCase
 
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
     }
 
@@ -50,7 +50,7 @@ class SlimTest extends TestCase
         ));
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
     }
 
@@ -64,7 +64,7 @@ class SlimTest extends TestCase
         ));
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
     }
 
@@ -75,7 +75,7 @@ class SlimTest extends TestCase
             '/' => 'Controller:index',
         ));
         /** @var \Slim\Router $router */
-        $router = $this->app->container->get('router');
+        $router = $this->app->getContainer()->get('router');
         
         static::assertEquals(\FastRoute\Dispatcher::FOUND, $router->dispatch($this->req)[0]);
 
@@ -102,7 +102,7 @@ class SlimTest extends TestCase
         ));
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
     }
 
@@ -114,7 +114,7 @@ class SlimTest extends TestCase
         ));
         static::assertEquals(
             \FastRoute\Dispatcher::FOUND,
-            $this->app->container->get('router')->dispatch($this->req)[0]
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
         );
     }
 
@@ -135,9 +135,7 @@ class SlimTest extends TestCase
             '/bla' => 'Controller:index'
         ), fn() => false);
 
-        /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $router = $this->app->getContainer()->get('router');
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -157,8 +155,7 @@ class SlimTest extends TestCase
         ), $middlewares);
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -173,8 +170,7 @@ class SlimTest extends TestCase
         ));
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -194,8 +190,7 @@ class SlimTest extends TestCase
         ));
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -215,8 +210,7 @@ class SlimTest extends TestCase
         ));
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -231,8 +225,7 @@ class SlimTest extends TestCase
         ), array(fn() => false, fn() => false));
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -256,8 +249,7 @@ class SlimTest extends TestCase
         $this->app->addRoutes(array(
             '/bla' => 'Test:index'
         ));
-        [$route] = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        $route->dispatch();
+        $route = $this->app->getContainer()->get('router')->dispatch($this->req);
     }
 
     public function testEmptyButNotNullMethodSuffixAccepted()
@@ -269,7 +261,7 @@ class SlimTest extends TestCase
         $this->app->addRoutes(array(
             '/bla' => 'Test:notSuffixedMethod'
         ));
-        [$route] = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
+        [$route] = $this->app->getContainer()->get('router')->dispatch($this->req);
         $route->dispatch();
     }
 
@@ -281,7 +273,7 @@ class SlimTest extends TestCase
             '/', 'Controller:index'
         );
 
-        static::assertEquals(1, count($this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+            $this->app->getContainer()->get('router')->dispatch($this->req)[0]
     }
 
     public function testAddControllerRouteWithMiddleware()
@@ -295,8 +287,7 @@ class SlimTest extends TestCase
             );
 
         /** @var \Slim\Route[] $routes */
-        $routes = $this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri());
-        static::assertEquals(1, count($routes));
+        $routes = $this->app->getContainer()->get('router')->dispatch($this->req);
 
         $middleware = $routes[0]->getMiddleware();
         static::assertIsArray($middleware);
@@ -312,9 +303,9 @@ class SlimTest extends TestCase
             '/something/:id' => 'Something:show'
         ));
 
-        static::assertEquals('/', $this->app->urlFor('Controller:index'));
-        static::assertEquals('/bla', $this->app->urlFor('Bla:Index'));
-        static::assertEquals('/something/:id', $this->app->urlFor('Something:show'));
+        static::assertEquals('/', $this->app->getContainer()->get('router')->pathFor('Controller:index'));
+        static::assertEquals('/bla', $this->app->getContainer()->get('router')->pathFor('Bla:Index'));
+        static::assertEquals('/something/{id}', $this->app->getContainer()->get('router')->pathFor('Something:show'));
     }
 
     public function testNamedRoutesThrowsExceptionIfLookingForARouteThatDoesNotExist()
@@ -328,7 +319,7 @@ class SlimTest extends TestCase
             '/something/:id' => 'Something:show'
         ));
 
-        static::assertEquals('/', $this->app->urlFor('this is not a named route'));
+        static::assertEquals('/', $this->app->getContainer()->get('router')->pathFor('this is not a named route'));
     }
 
     public function testServiceControllersAreFetched()
