@@ -19,9 +19,12 @@ class SlimTest extends TestCase
             '/alb' => array('get' => 'Controller:index')
         ));
 
-        static::assertEquals(1, count($this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(
+            \FastRoute\Dispatcher::FOUND,
+            $this->app->container->get('router')->dispatch($this->req)[0]
+        );
         // $this->assertTrue($this->app->router->hasNamedRoute('Controller:index'));
-        static::assertEquals('/bla', $this->app->urlFor('Controller:index'));
+        static::assertEquals('/bla', $this->app->container->get('router')->pathFor('Controller:index'));
     }
 
     public function testAddingroutesWithOldSyntaxWithoutMiddlewares()
