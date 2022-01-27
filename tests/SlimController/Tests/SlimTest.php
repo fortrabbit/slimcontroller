@@ -98,9 +98,12 @@ class SlimTest extends TestCase
     {
         $this->setUrl('/hello/you');
         $this->app->addRoutes(array(
-            '/hello/:name' => 'Controller:index',
+            '/hello/{name}' => 'Controller:index',
         ));
-        static::assertEquals(1, count($this->app->container->get('router')->getMatchedRoutes($this->req->getMethod(), $this->req->getResourceUri())));
+        static::assertEquals(
+            \FastRoute\Dispatcher::FOUND,
+            $this->app->container->get('router')->dispatch($this->req)[0]
+        );
     }
 
     public function testAddRoutesInExtendedFormat()
