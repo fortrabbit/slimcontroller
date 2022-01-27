@@ -72,17 +72,17 @@ abstract class SlimController
     public function __construct(\Slim\App &$app)
     {
         $this->app = $app;
-        if ($renderTemplateSuffix = $app->container()->get('settings')['controller.template_suffix']) {
+        if ($renderTemplateSuffix = $app->getContainer()->get('settings')['controller.template_suffix']) {
             $this->renderTemplateSuffix = $renderTemplateSuffix;
         }
-        if (!is_null($paramPrefix = $app->container()->get('settings')['controller.param_prefix'])) {
+        if (!is_null($paramPrefix = $app->getContainer()->get('settings')['controller.param_prefix'])) {
             $this->paramPrefix = $paramPrefix;
             $prefixLength      = strlen($this->paramPrefix);
             if ($prefixLength > 0 && substr($this->paramPrefix, -$prefixLength) !== '.') {
                 $this->paramPrefix .= '.';
             }
         }
-        if ($app->container()->get('settings')['controller.cleanup_params']) {
+        if ($app->getContainer()->get('settings')['controller.cleanup_params']) {
             $this->paramCleanup = true;
         }
     }
